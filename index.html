@@ -1,0 +1,1730 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>袁珊珊 - AI产品创意师 | Shanshan Yuan</title>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --color-soft-pink: #F5D4E0;
+            --color-soft-teal: #D4E8F5;
+            --color-cream: #FFFAF0;
+            --color-gold: #F5E8D4;
+            --color-deep-blue: #2C5282;
+            --color-sage: #C8D9CC;
+            --color-accent: #E88BA5;
+            --color-text: #3D2817;
+            --color-text-light: #6B5B4E;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: var(--color-text);
+            background-image: url('https://agi-prod-file-upload-public-main-use1.s3.amazonaws.com/6b20d415-d14f-470b-b923-3f2793bd5ec1');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            background-repeat: no-repeat;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* HERO SECTION */
+        .hero {
+            position: relative;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            background-image: url('https://agi-prod-file-upload-public-main-use1.s3.amazonaws.com/6b20d415-d14f-470b-b923-3f2793bd5ec1');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+
+        .hero::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(180deg, rgba(200, 180, 220, 0.15) 0%, rgba(230, 200, 180, 0.1) 40%, rgba(200, 220, 240, 0.1) 70%, rgba(255, 240, 220, 0.2) 100%);
+            pointer-events: none;
+        }
+
+        .hero::after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 50%;
+            background: linear-gradient(180deg, transparent 0%, rgba(200, 180, 200, 0.3) 50%, rgba(220, 200, 210, 0.4) 100%);
+            pointer-events: none;
+            backdrop-filter: blur(1px);
+        }
+
+        .hero-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: block;
+            filter: contrast(1.1) saturate(0.9);
+            mix-blend-mode: screen;
+            opacity: 0.85;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            animation: fadeInUp 1.2s ease-out;
+        }
+
+        .hero-title {
+            font-size: 3.5rem;
+            font-weight: 300;
+            color: rgba(255, 255, 255, 0.95);
+            text-shadow: 3px 5px 15px rgba(0, 0, 0, 0.25);
+            margin-bottom: 1rem;
+            letter-spacing: 3px;
+            font-style: italic;
+            font-family: 'Georgia', 'Garamond', serif;
+        }
+
+        .hero-subtitle {
+            font-size: 1.3rem;
+            color: rgba(255, 255, 255, 0.88);
+            font-weight: 300;
+            text-shadow: 2px 3px 8px rgba(0, 0, 0, 0.2);
+            margin-bottom: 2rem;
+            letter-spacing: 1px;
+            font-family: 'Georgia', 'Garamond', serif;
+        }
+
+        .hero-cta {
+            display: inline-block;
+            padding: 12px 40px;
+            background: rgba(232, 139, 165, 0.85);
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            transition: all 0.4s ease;
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .hero-cta:hover {
+            background: rgba(232, 139, 165, 1);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(232, 139, 165, 0.3);
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* FLOATING PARTICLES */
+        .particles {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+        }
+
+        .particle {
+            position: absolute;
+            pointer-events: none;
+            opacity: 0.7;
+        }
+
+        .particle::before {
+            content: "";
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 50%;
+            box-shadow: 0 0 10px rgba(255, 182, 193, 0.6);
+        }
+
+        /* ABOUT SECTION SPLIT-SCREEN */
+        .about {
+            padding: 0;
+            background: transparent;
+            position: relative;
+            overflow: hidden;
+            min-height: 100vh;
+            display: flex;
+        }
+
+        .split-container {
+            display: flex;
+            width: 100%;
+            height: 100vh;
+            gap: 0;
+        }
+
+        /* LEFT SIDE - 3D CHARACTER */
+        .about-image-side {
+            flex: 1 1 60%;
+            overflow: hidden;
+            position: relative;
+            background: linear-gradient(135deg, #87CEEB 0%, #E0F6FF 50%, #FFE4E1 100%);
+            perspective: 1200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .anime-character {
+            width: 90%;
+            height: 90%;
+            object-fit: contain;
+            object-position: center;
+            cursor: pointer;
+            transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.2)) brightness(1.05);
+            transform-style: preserve-3d;
+            transform: perspective(1000px) rotateX(0deg) rotateY(0deg);
+        }
+
+        .anime-character:hover {
+            transform: perspective(1000px) rotateX(5deg) rotateY(-8deg) scale(1.08);
+            filter: drop-shadow(0 30px 60px rgba(0, 0, 0, 0.3)) brightness(1.15);
+        }
+
+        .anime-character.bounce {
+            animation: characterBounce 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        @keyframes characterBounce {
+            0%, 100% { transform: perspective(1000px) rotateX(0deg) rotateY(0deg) translateY(0) scale(1); }
+            25% { transform: perspective(1000px) rotateX(8deg) rotateY(-5deg) translateY(-30px) scale(1.05); }
+            50% { transform: perspective(1000px) rotateX(10deg) rotateY(-10deg) translateY(-60px) scale(1.12); }
+            75% { transform: perspective(1000px) rotateX(6deg) rotateY(-7deg) translateY(-25px) scale(1.08); }
+        }
+
+        .image-click-hint {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(232, 139, 165, 0.9);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            opacity: 0;
+            animation: fadeInOut 3s ease-in-out infinite;
+            pointer-events: none;
+            z-index: 5;
+        }
+
+        @keyframes fadeInOut {
+            0%, 100% { opacity: 0; }
+            10%, 90% { opacity: 1; }
+        }
+
+        /* RIGHT SIDE - TEXT & DIALOGUE */
+        .about-text-side {
+            flex: 1 1 40%;
+            background: linear-gradient(135deg, #f5f1e8 0%, #e8dfd0 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .about-text-side::before {
+            content: "";
+            position: absolute;
+            top: -50%;
+            right: -10%;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(245, 212, 224, 0.3), transparent);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .dialogue-box {
+            background: white;
+            border-radius: 25px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.8);
+            max-width: 380px;
+            width: 100%;
+            position: relative;
+            z-index: 2;
+            animation: slideInRight 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        @keyframes slideInRight {
+            from { opacity: 0; transform: translateX(50px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .dialogue-header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 2px solid var(--color-soft-pink);
+            padding-bottom: 15px;
+        }
+
+        .dialogue-header h3 {
+            font-size: 1.8rem;
+            color: var(--color-accent);
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .dialogue-header p {
+            font-size: 0.9rem;
+            color: var(--color-text-light);
+            font-style: italic;
+        }
+
+        .dialogue-body {
+            min-height: 200px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .typewriter-text {
+            font-size: 1.05rem;
+            color: var(--color-text);
+            line-height: 1.8;
+            font-family: 'Georgia', serif;
+            white-space: pre-wrap;
+            word-break: break-word;
+            position: relative;
+        }
+
+        .typewriter-text::after {
+            content: "|";
+            position: relative;
+            animation: blink 1s infinite;
+            margin-left: 4px;
+            color: var(--color-accent);
+        }
+
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+        }
+
+        .dialogue-footer {
+            margin-top: 30px;
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .dialogue-tag {
+            display: inline-block;
+            padding: 6px 14px;
+            background: var(--color-soft-pink);
+            color: var(--color-text);
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .dialogue-tag:hover {
+            background: var(--color-accent);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 2;
+        }
+
+        .section-title {
+            font-size: 2.8rem;
+            color: var(--color-deep-blue);
+            margin-bottom: 50px;
+            text-align: center;
+            position: relative;
+            font-weight: 400;
+            letter-spacing: 1px;
+        }
+
+        .section-title::after {
+            content: "";
+            display: block;
+            width: 80px;
+            height: 3px;
+            background: linear-gradient(90deg, var(--color-accent), transparent);
+            margin: 15px auto 0;
+        }
+
+        /* EXPERIENCE SECTION */
+        .experience {
+            padding: 100px 50px;
+            background: transparent;
+            position: relative;
+        }
+
+        .experience::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -10%;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(200, 217, 204, 0.3), transparent);
+            border-radius: 50%;
+        }
+
+        .timeline {
+            position: relative;
+            padding: 20px 0;
+        }
+
+        .timeline::before {
+            content: "";
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 3px;
+            height: 100%;
+            background: linear-gradient(180deg, var(--color-accent), transparent);
+        }
+
+        .timeline-item {
+            margin-bottom: 50px;
+            width: 48%;
+            position: relative;
+            opacity: 0;
+            animation: slideIn 0.8s ease forwards;
+        }
+
+        .timeline-item:nth-child(odd) {
+            margin-left: 0;
+            text-align: right;
+            padding-right: 5%;
+        }
+
+        .timeline-item:nth-child(even) {
+            margin-left: 52%;
+            text-align: left;
+            padding-left: 5%;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .timeline-item:nth-child(even) { animation-delay: 0.2s; }
+        .timeline-item:nth-child(odd):nth-child(3n) { animation-delay: 0.4s; }
+
+        .timeline-dot {
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            background: var(--color-accent);
+            border: 4px solid var(--color-cream);
+            border-radius: 50%;
+            left: 50%;
+            top: 30px;
+            transform: translateX(-50%);
+            z-index: 3;
+            box-shadow: 0 0 15px rgba(232, 139, 165, 0.5);
+        }
+
+        .timeline-content {
+            background: rgba(255, 255, 255, 0.8);
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+        }
+
+        .timeline-content:hover {
+            box-shadow: 0 10px 30px rgba(232, 139, 165, 0.2);
+            transform: translateY(-5px);
+        }
+
+        .timeline-content h4 {
+            color: var(--color-accent);
+            font-size: 1.3rem;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .timeline-content .company {
+            font-size: 1rem;
+            color: var(--color-deep-blue);
+            font-weight: 500;
+            margin-bottom: 5px;
+        }
+
+        .timeline-content .date {
+            font-size: 0.85rem;
+            color: var(--color-text-light);
+            margin-bottom: 12px;
+        }
+
+        .timeline-content ul {
+            font-size: 0.95rem;
+            color: var(--color-text-light);
+            padding-left: 20px;
+        }
+
+        .timeline-content li {
+            margin-bottom: 8px;
+        }
+
+        /* SKILLS SECTION */
+        .skills {
+            display: none;
+        }
+
+        /* 3D INTERACTIVE SECTION */
+        .interactive {
+            padding: 100px 50px;
+            background: transparent;
+            position: relative;
+            min-height: 100vh;
+        }
+
+        .interactive-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+        }
+
+        .castle-3d {
+            perspective: 1000px;
+            height: 500px;
+            position: relative;
+        }
+
+        .message-section {
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.85);
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .message-section h3 {
+            color: var(--color-deep-blue);
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+
+        .message-input {
+            width: 100%;
+            padding: 15px;
+            margin-bottom: 12px;
+            border: 2px solid var(--color-soft-teal);
+            border-radius: 10px;
+            font-size: 1rem;
+            font-family: inherit;
+            color: var(--color-text);
+            background: rgba(255, 255, 255, 0.9);
+            transition: all 0.3s ease;
+        }
+
+        .message-input:focus {
+            outline: none;
+            border-color: var(--color-accent);
+            box-shadow: 0 0 20px rgba(232, 139, 165, 0.3);
+            background: white;
+        }
+
+        textarea.message-input {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .message-btn {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, var(--color-accent), #E88BA5);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(232, 139, 165, 0.3);
+        }
+
+        .message-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(232, 139, 165, 0.4);
+        }
+
+        .message-btn:active {
+            transform: translateY(0);
+        }
+
+        .message-item .name {
+            font-weight: 600;
+            color: var(--color-accent);
+            font-size: 0.9rem;
+        }
+
+        .message-item .time {
+            font-size: 0.8rem;
+            color: var(--color-text-light);
+        }
+
+        .message-item .content {
+            margin-top: 5px;
+            color: var(--color-text);
+            font-size: 0.95rem;
+        }
+
+        /* CONTACT SECTION */
+        .contact {
+            padding: 100px 50px;
+            background: transparent;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .contact::before {
+            content: "";
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(232, 139, 165, 0.2), transparent);
+            border-radius: 50%;
+            bottom: -200px;
+            right: -200px;
+            pointer-events: none;
+        }
+
+        .contact-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .contact-info {
+            display: flex;
+            justify-content: center;
+            gap: 50px;
+            flex-wrap: wrap;
+            margin-top: 40px;
+        }
+
+        .contact-item {
+            transition: all 0.3s ease;
+        }
+
+        .contact-item:hover {
+            transform: translateY(-5px);
+        }
+
+        .contact-item h4 {
+            color: var(--color-accent);
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+
+        .contact-item p {
+            color: var(--color-text-light);
+            font-size: 1rem;
+        }
+
+        .contact-item a {
+            color: var(--color-accent);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .contact-item a:hover {
+            text-decoration: underline;
+        }
+
+        /* SCROLLING INDICATOR */
+        .scroll-indicator {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 100;
+            opacity: 0.8;
+            transition: opacity 0.3s ease;
+        }
+
+        .scroll-indicator:hover {
+            opacity: 1;
+        }
+
+        .scroll-indicator svg {
+            width: 40px;
+            height: 40px;
+            stroke: var(--color-accent);
+            fill: none;
+            stroke-width: 2;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            .hero-title { font-size: 2rem; }
+            .hero-subtitle { font-size: 1rem; }
+            .split-container { flex-direction: column; height: auto; }
+            .about-image-side { flex: 1 1 50vh; min-height: 50vh; }
+            .about-text-side { flex: 1 1 50vh; min-height: 50vh; padding: 30px 20px; }
+            .dialogue-box { max-width: 100%; }
+            .timeline::before { left: 0; }
+            .timeline-item { width: 100%; padding: 0 0 0 40px; text-align: left; }
+            .timeline-item:nth-child(odd) { margin-left: 0; text-align: left; padding-right: 0; padding-left: 40px; }
+            .timeline-item:nth-child(even) { margin-left: 0; text-align: left; padding-left: 40px; }
+            .timeline-dot { left: -10px; }
+            .interactive-container { grid-template-columns: 1fr; gap: 40px; }
+            .section-title { font-size: 2rem; }
+            .skills-grid { grid-template-columns: 1fr; }
+            .contact-info { gap: 30px; flex-direction: column; }
+        }
+
+        /* Updated Message Board */
+        .messages-display {
+            margin-top: 18px;
+            max-height: 160px;
+            overflow-y: auto;
+            padding: 15px;
+            background: rgba(212, 232, 245, 0.3);
+            border-radius: 10px;
+            scroll-behavior: smooth;
+        }
+        .message-item {
+            position: relative;
+            padding: 12px 70px 12px 12px;
+            margin-bottom: 10px;
+            background: white;
+            border-radius: 8px;
+            border-left: 4px solid var(--color-accent);
+            animation: messageSlide 0.3s ease;
+        }
+        .message-delete {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            border: none;
+            background: rgba(232, 139, 165, 0.12);
+            color: var(--color-accent);
+            padding: 4px 10px;
+            border-radius: 999px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        .message-delete:hover {
+            background: rgba(232, 139, 165, 0.25);
+        }
+        /* Castle Replacement & Word Cloud */
+        .castle-visual {
+            width: 100%;
+            height: 100%;
+            background-image: url('generated-image-1.jpg');
+            background-size: cover;
+            background-position: center;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+        }
+        .castle-visual::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: rgba(255,255,255,0.35);
+            backdrop-filter: blur(1px);
+            pointer-events: none;
+        }
+        .word-cloud {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            padding: 18px;
+            z-index: 1;
+        }
+        .word-cloud span {
+            position: absolute;
+            transform: translate(-50%, -50%);
+            max-width: 82%;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            padding: 6px 10px;
+            border-radius: 999px;
+            background: rgba(255,255,255,0.55);
+            color: var(--color-deep-blue);
+            box-shadow: 0 8px 18px rgba(0,0,0,0.08);
+            user-select: none;
+        }
+        /* --- 可爱信封弹窗样式 --- */
+.envelope-popup-container {
+    background: transparent !important; /* 移除默认背景 */
+    overflow: visible !important;
+}
+
+.envelope-card {
+    background: var(--color-cream);
+    border-radius: 20px;
+    padding: 2rem;
+    border: 4px solid var(--color-soft-pink);
+    box-shadow: 0 10px 30px rgba(232, 139, 165, 0.2);
+    position: relative;
+    max-width: 400px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+/* 信封折角装饰 */
+.envelope-card::before {
+    content: '';
+    position: absolute;
+    top: -20px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-left: 150px solid transparent;
+    border-right: 150px solid transparent;
+    border-bottom: 20px solid var(--color-soft-pink); /* 信封盖 */
+    z-index: 2;
+}
+
+/* 爱心封口 */
+.envelope-heart {
+    position: absolute;
+    top: -30px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 40px;
+    z-index: 3;
+    animation: heartBeat 1.5s infinite;
+}
+
+@keyframes heartBeat {
+    0%, 100% { transform: translateX(-50%) scale(1); }
+    50% { transform: translateX(-50%) scale(1.1); }
+}
+
+.envelope-title {
+    font-family: 'Caveat', cursive;
+    color: var(--color-deep-blue);
+    font-size: 2rem;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.envelope-text {
+    color: var(--color-text);
+    font-size: 1rem;
+    margin-bottom: 20px;
+}
+
+/* 可爱的输入框 */
+.cute-input {
+    width: 80%;
+    padding: 12px 20px;
+    border: 2px dashed var(--color-soft-pink);
+    border-radius: 30px;
+    outline: none;
+    background: #fff;
+    color: var(--color-deep-blue);
+    font-size: 1.1rem;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.cute-input:focus {
+    border-color: var(--color-accent);
+    box-shadow: 0 0 15px rgba(232, 139, 165, 0.3);
+}
+
+/* 按钮组 */
+.envelope-actions {
+    margin-top: 25px;
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+.btn-cute {
+    padding: 8px 25px;
+    border-radius: 50px;
+    border: none;
+    cursor: pointer;
+    font-family: 'Caveat', cursive;
+    font-size: 1.3rem;
+    transition: transform 0.2s;
+}
+
+.btn-confirm {
+    background: var(--color-accent);
+    color: white;
+    box-shadow: 0 4px 10px rgba(232, 139, 165, 0.4);
+}
+
+.btn-cancel {
+    background: #f0f0f0;
+    color: #888;
+}
+
+.btn-cute:hover {
+    transform: scale(1.05);
+}
+
+
+    </style>
+    <!-- SweetAlert2 Dark Theme -->
+<link href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-dark@4/dark.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.js"></script>
+
+</head>
+<body>
+
+    <!-- HERO SECTION -->
+    <section class="hero">
+        <canvas class="hero-canvas" id="heroCanvas"></canvas>
+        <div class="particles" id="particles"></div>
+        <div class="hero-content">
+            <h1 class="hero-title">袁珊珊</h1>
+            <p class="hero-subtitle">AI Product Creator | 梦想设计师</p>
+            <button class="hero-cta" onclick="smoothScroll('about')">探索我的世界</button>
+        </div>
+    </section>
+
+    <!-- ABOUT SECTION SPLIT-SCREEN -->
+    <section class="about" id="about">
+        <div class="split-container">
+            <!-- Left: Character -->
+            <div class="about-image-side">
+                <img id="characterImage" class="anime-character" src="https://agi-prod-file-upload-public-main-use1.s3.amazonaws.com/cb812b77-7baa-49e5-9dcc-8819427a1a85" alt="Character with cat at train station">
+                <div class="image-click-hint">点我试试</div>
+            </div>
+
+            <!-- Right: Dialogue -->
+            <div class="about-text-side">
+                <div class="dialogue-box">
+                    <div class="dialogue-header">
+                        <h3 id="dialogueTitle">AI产品创意师</h3>
+                        <p id="dialogueSubtitle">Creative Director</p>
+                    </div>
+                    <div class="dialogue-body">
+                        <p class="typewriter-text" id="typewriterText"></p>
+                    </div>
+                    <div class="dialogue-footer">
+                        <span class="dialogue-tag">AI产品</span>
+                        <span class="dialogue-tag">创意设计</span>
+                        <span class="dialogue-tag">AIGC应用</span>
+                        <span class="dialogue-tag">数据创新</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- EXPERIENCE SECTION -->
+    <section class="experience" id="experience">
+        <div class="container">
+            <h2 class="section-title">MY Journey</h2>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <h4>AI 产品- 模型效果</h4>
+                        <div class="company">OiiOii动画agent</div>
+                        <div class="date">2025.10 - 2025.12</div>
+                        <ul>
+                            <li>System Prompt设计：优化AI角色扮演体验，用户留存提升45%</li>
+                            <li>提示词工程：开发自动化提示词生成工具，效率提升80-90%</li>
+                            <li>Cut长视频工作流：设计从脚本到分镜的自动化视频生成方案</li>
+                            <li>数据飞轮：构建1200+高质量评测集，模型响应准确率提升60%</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <h4>AI产品经理</h4>
+                        <div class="company">芒果TV - 智能算法部</div>
+                        <div class="date">2025.06 - 2025.09</div>
+                        <ul>
+                            <li>内容平台重构：主导AI辅助内容生产平台，月产出内容量翻倍</li>
+                            <li>模型微调：基于开源模型进行LoRA微调，定制品牌专属风格</li>
+                            <li>跨部门协作：打通技术与美术团队壁垒，落地3个创新AI应用</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <h4>AI产品运营</h4>
+                        <div class="company">讯飞智文 - AIPPT</div>
+                        <div class="date">2025.03 - 2025.06</div>
+                        <ul>
+                            <li>用户增长：通过精准投放与KOL合作，实现用户增长76w+</li>
+                            <li>模版生态：建立设计师激励机制，模版库扩充14倍</li>
+                            <li>KOL合作：签约头部科技博主，品牌曝光量破千万</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SKILLS SECTION -->
+    <section class="skills" id="skills">
+        <div class="container">
+            <h2 class="section-title">技能星图</h2>
+            <div class="skills-grid">
+                <div class="skill-card">
+                    <div class="skill-icon">🎨</div>
+                    <h4>AIGC工具流</h4>
+                    <p>熟练掌握MJ, SD, Runway, Pika等主流生成式AI工具，具备LoRA训练能力。</p>
+                </div>
+                <div class="skill-card">
+                    <div class="skill-icon">🧠</div>
+                    <h4>提示词工程</h4>
+                    <p>精通结构化Prompt编写，擅长通过思维链(CoT)优化模型输出质量。</p>
+                </div>
+                <div class="skill-card">
+                    <div class="skill-icon">📊</div>
+                    <h4>数据分析</h4>
+                    <p>善于通过数据洞察用户需求，构建数据飞轮优化产品体验。</p>
+                </div>
+                <div class="skill-card">
+                    <div class="skill-icon">💡</div>
+                    <h4>产品规划</h4>
+                    <p>具备从0到1的产品设计能力，熟悉敏捷开发流程与用户体验设计。</p>
+                </div>
+                <div class="skill-card">
+                    <div class="skill-icon">🤝</div>
+                    <h4>跨界协作</h4>
+                    <p>能够连接技术、设计与业务团队，将AI技术转化为落地的商业价值。</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- INTERACTIVE 3D SECTION -->
+    <section class="interactive" id="interactive">
+        <div class="container">
+            <h2 class="section-title">留言之城</h2>
+            
+            <div class="interactive-container">
+                <!-- 3D Castle Visual (Replaced with Word Cloud) -->
+                <div class="castle-3d">
+                    
+<div class="castle-visual">
+                    <div id="wordCloud" class="word-cloud" aria-label="留言词云"></div>
+                </div>
+            </div>
+
+            <div class="message-section">
+                    <h3>留下你的足迹</h3>
+                    <p style="color: var(--color-text-light); margin-bottom: 20px;">在这座浮空城堡中，每一条留言都是一段新的故事。</p>
+                    
+                    <input type="text" class="message-input" id="nameInput" placeholder="Your Name">
+                    <textarea class="message-input" id="messageInput" placeholder="Your Message..."></textarea>
+                    <button class="message-btn" onclick="submitMessage()">发送留言</button>
+
+                    <div class="messages-display" id="messagesDisplay">
+                        <!-- Messages will be injected here via JS -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CONTACT SECTION -->
+    <section class="contact" id="contact">
+        <div class="contact-content">
+            <h2 class="section-title">联系我</h2>
+            <p style="color: var(--color-text-light); font-size: 1.1rem; max-width: 600px; margin: 0 auto 40px;">
+                如果你对AI产品、创意设计或数据创新感兴趣，我很期待和你交流。
+            </p>
+            
+            <div class="contact-info">
+                <div class="contact-item">
+                    <h4>邮箱</h4>
+                    <p><a href="mailto:yss023@126.com">yss023@126.com</a></p>
+                </div>
+                <div class="contact-item">
+                    <h4>微信</h4>
+                    <p>Luv__susan</p>
+                </div>
+                <div class="contact-item">
+                    <h4>电话</h4>
+                    <p><a href="tel:19956343621">19956343621</a></p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SCROLL INDICATOR -->
+    <div class="scroll-indicator">
+        <svg viewBox="0 0 24 24">
+            <path d="M12 2v16m8-8l-8 8-8-8" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+    </div>
+
+    <script>
+        // ========== DATA & CONFIG ==========
+        const dialogueContent = {
+            role1: {
+                title: "AI产品创意师",
+                subtitle: "Creative Director",
+                text: "你好！我是袁珊珊。我致力于将AI技术与创意设计深度融合，打造有温度、有灵魂的AI产品。在OiiOii和芒果TV，我通过提示词工程和LoRA模型微调，让AI角色不仅能聊天，更拥有了独特的性格与画风。"
+            },
+            role2: {
+                title: "提示词工程师",
+                subtitle: "Prompt Engineer",
+                text: "提示词不仅是指令，更是魔法。我设计了自动化的Prompt生成工具，将内容生产效率提升了80%以上。每一个精准的Prompt背后，都是对大模型能力的深度理解与调教。"
+            },
+            role3: {
+                title: "文艺女青年",
+                subtitle: "Artistic Soul",
+                text: "我喜欢探索未知，最大的梦想是开一家书咖，我会散落复古的手账本在里面——来访者可以留言，感受漂泊的灵魂有个归宿，在咖啡的焦香中阅读纸质书，在浮躁的世界中平静一会。"
+            }
+        };
+
+        let currentIndex = 0;
+        const typeSpeed = 50;
+        
+        // ========== TYPEWRITER EFFECT ==========
+        // 在 currentIndex 附近添加一个 timer 变量
+        let typeWriterTimer = null; // 新增：用于存储定时器ID
+
+        function typeWriter(text, speed = typeSpeed) {
+            const typewriterElement = document.getElementById("typewriterText");
+            
+            // 新增：如果有正在进行的打字任务，先清除它
+            if (typeWriterTimer) {
+                clearTimeout(typeWriterTimer);
+                typeWriterTimer = null;
+            }
+
+            typewriterElement.textContent = "";
+            let index = 0;
+
+            function type() {
+                if (index < text.length) {
+                    typewriterElement.textContent += text.charAt(index);
+                    index++;
+                    // 修改：将 setTimeout 赋值给全局变量，方便下次清除
+                    typeWriterTimer = setTimeout(type, speed);
+                }
+            }
+            type();
+        }
+
+
+        function updateDialogue(index) {
+            const content = Object.values(dialogueContent)[index % Object.keys(dialogueContent).length];
+            document.getElementById("dialogueTitle").textContent = content.title;
+            document.getElementById("dialogueSubtitle").textContent = content.subtitle;
+            typeWriter(content.text);
+
+            const characterImage = document.getElementById("characterImage");
+            // Simple bounce animation trigger
+            characterImage.addEventListener('click', () => {
+                characterImage.classList.remove('bounce');
+                void characterImage.offsetWidth; // trigger reflow
+                characterImage.classList.add('bounce');
+                
+                // Cycle dialogue on click
+                currentIndex = (currentIndex + 1) % Object.keys(dialogueContent).length;
+                updateDialogue(currentIndex);
+            }, { once: true }); // Re-bind on next update to avoid multi-click issues logic simplifiction
+        }
+
+        // Fix click listener logic for character to cycle dialogue properly
+        document.getElementById("characterImage").addEventListener('click', () => {
+             const characterImage = document.getElementById("characterImage");
+             characterImage.classList.remove('bounce');
+             void characterImage.offsetWidth;
+             characterImage.classList.add('bounce');
+             
+             currentIndex = (currentIndex + 1) % Object.keys(dialogueContent).length;
+             updateDialogue(currentIndex);
+        });
+
+
+        // ========== PARTICLES ANIMATION ==========
+        function initParticles() {
+            const container = document.getElementById('particles');
+            const particleCount = 30;
+
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.top = Math.random() * 100 + '%';
+                
+                const duration = 3 + Math.random() * 7;
+                const delay = Math.random() * 2;
+                
+                particle.style.animation = `float ${duration}s infinite ease-in-out ${delay}s`;
+                container.appendChild(particle);
+            }
+        }
+        
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes float {
+                0%, 100% { transform: translateY(0px) translateX(0px); opacity: 0.5; }
+                50% { transform: translateY(-30px) translateX(20px); opacity: 0.8; }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // ========== CANVAS ANIMATION ==========
+        function initHeroCanvas() {
+            const canvas = document.getElementById('heroCanvas');
+            const ctx = canvas.getContext('2d');
+            
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+
+            let animationId;
+            const clouds = [];
+            const rays = [];
+            let time = 0;
+
+            // Generate clouds
+            for(let i = 0; i < 12; i++) {
+                const layer = i < 4 ? 0.3 : (i < 8 ? 0.6 : 0.9);
+                clouds.push({
+                    x: Math.random() * canvas.width,
+                    y: canvas.height * (0.2 + Math.random() * 0.4) * layer,
+                    width: 80 + Math.random() * 200,
+                    height: 30 + Math.random() * 50,
+                    opacity: 0.2 + Math.random() * 0.35,
+                    speed: 0.15 + Math.random() * 0.4,
+                    depth: layer
+                });
+            }
+
+            // Generate light rays
+            for(let i = 0; i < 8; i++) {
+                rays.push({
+                    x: canvas.width * (0.15 + i * 0.1),
+                    angle: -0.3 + Math.random() * 0.6,
+                    opacity: 0.05 + Math.random() * 0.08
+                });
+            }
+
+            function drawCloud(x, y, w, h, opacity) {
+                const gradient = ctx.createRadialGradient(x, y, 0, x, y, w*0.5);
+                gradient.addColorStop(0, `rgba(255, 255, 255, ${opacity * 0.8})`);
+                gradient.addColorStop(0.5, `rgba(245, 240, 235, ${opacity * 0.5})`);
+                gradient.addColorStop(1, `rgba(255, 245, 240, ${opacity * 0.1})`);
+                
+                ctx.fillStyle = gradient;
+                ctx.beginPath();
+                ctx.ellipse(x, y, w*0.4, h*0.5, 0, 0, Math.PI * 2);
+                ctx.fill();
+                
+                // Add some fluff
+                ctx.beginPath();
+                ctx.ellipse(x + w*0.28, y - h*0.15, w*0.38, h*0.48, 0, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.beginPath();
+                ctx.ellipse(x - w*0.28, y - h*0.18, w*0.35, h*0.45, 0, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Tint
+                ctx.fillStyle = `rgba(245, 212, 224, ${opacity * 0.15})`;
+                ctx.beginPath();
+                ctx.ellipse(x + w*0.15, y + h*0.1, w*0.25, h*0.3, 0, 0, Math.PI * 2);
+                ctx.fill();
+            }
+
+            function drawCrepsucularRays() {
+                rays.forEach((ray, idx) => {
+                    const waveOffset = Math.sin(time * 0.8 + idx) * 0.05;
+                    const intensity = 0.4 + 0.6 * Math.sin(time * 0.5 + idx);
+                    
+                    ctx.strokeStyle = `rgba(255, 220, 200, ${ray.opacity * intensity * 0.7})`;
+                    ctx.lineWidth = 5 + Math.sin(time * 0.3 + idx) * 2;
+                    ctx.lineCap = 'round';
+                    
+                    ctx.beginPath();
+                    ctx.moveTo(ray.x, 0);
+                    ctx.lineTo(ray.x + canvas.height * 0.8 * Math.tan(ray.angle + waveOffset), canvas.height);
+                    ctx.stroke();
+
+                    // Secondary ray
+                    ctx.strokeStyle = `rgba(255, 240, 220, ${ray.opacity * intensity * 0.3})`;
+                    ctx.lineWidth = 8 + Math.sin(time * 0.25 + idx) * 3;
+                    ctx.globalAlpha = 0.5;
+                    ctx.beginPath();
+                    ctx.moveTo(ray.x, 0);
+                    ctx.lineTo(ray.x + canvas.height * 0.8 * Math.tan(ray.angle + waveOffset), canvas.height);
+                    ctx.stroke();
+                    ctx.globalAlpha = 1;
+                });
+            }
+
+            function animate() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                time += 0.005;
+
+                drawCrepsucularRays();
+
+                clouds.forEach((cloud, idx) => {
+                    cloud.x += cloud.speed;
+                    // Parallax
+                    cloud.x += cloud.depth * 0.4;
+
+                    if(cloud.x > canvas.width + cloud.width) {
+                        cloud.x = -cloud.width;
+                    }
+
+                    const yOffset = Math.sin(time * 0.2 + cloud.depth * 2) * 15;
+                    const xWave = Math.cos(time * 0.15 + idx * 0.5) * 8;
+
+                    ctx.globalAlpha = cloud.opacity * (0.7 + 0.3 * Math.sin(time * 0.4));
+                    drawCloud(cloud.x + xWave, cloud.y + yOffset, cloud.width, cloud.height, cloud.opacity);
+                    ctx.globalAlpha = 1;
+                });
+
+                animationId = requestAnimationFrame(animate);
+            }
+
+            animate();
+
+            window.addEventListener('resize', () => {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            });
+        }
+
+        // ========== MESSAGE FUNCTIONALITY (with delete + word cloud) ==========
+        let messages = [];
+        try {
+            messages = JSON.parse(localStorage.getItem("messages") || "[]");
+            if (!Array.isArray(messages)) messages = [];
+        } catch (e) {
+            messages = [];
+        }
+
+        function saveMessages() {
+            localStorage.setItem("messages", JSON.stringify(messages));
+        }
+
+        function displayMessages() {
+            const display = document.getElementById("messagesDisplay");
+            if (!display) return;
+
+            display.innerHTML = "";
+
+            messages.forEach((msg) => {
+                const msgEl = document.createElement("div");
+                msgEl.className = "message-item";
+                // msgEl.dataset.id = msg.id; // Optional
+
+                msgEl.innerHTML = `
+                  <span class="name">${escapeHtml(msg.name)}</span>
+                  <span class="time"> ${escapeHtml(msg.time)}</span>
+                  <button class="message-delete" type="button" aria-label="Delete">删除</button>
+                  <div class="content">${escapeHtml(msg.content)}</div>
+                `;
+
+                msgEl.querySelector(".message-delete").addEventListener("click", () => {
+                  deleteMessage(msg.id);
+                });
+
+                display.appendChild(msgEl);
+            });
+
+            // Auto scroll to bottom
+            display.scrollTop = display.scrollHeight;
+        }
+
+                    function deleteMessage(id) {
+            Swal.fire({
+                // 移除默认元素，全靠 html 自定义
+                title: '',
+                icon: '',
+                width: 600,
+                padding: 0,
+                background: 'transparent', // 关键：背景透明
+                showConfirmButton: false, // 隐藏默认按钮
+                showCloseButton: false,
+                allowOutsideClick: true,
+                customClass: {
+                    popup: 'envelope-popup-container'
+                },
+                html: `
+                    <div class="envelope-card">
+                        <div class="envelope-heart">💌</div>
+                        <h2 class="envelope-title">验证邀请函</h2>
+                        <p class="envelope-text">想要删除这条回忆吗？<br>需要滴滴我拿密码：</p>
+                        
+                        <input type="password" id="cute-password" class="cute-input" placeholder="输入密码~ " autofocus>
+                        
+                        <div class="envelope-actions">
+                            <button onclick="checkPasswordAndClose('${id}')" class="btn-cute btn-confirm">确认删除</button>
+                            <button onclick="Swal.close()" class="btn-cute btn-cancel">我再想想</button>
+                        </div>
+                    </div>
+                `,
+                didOpen: () => {
+                    // 自动聚焦输入框
+                    const input = document.getElementById('cute-password');
+                    if(input) {
+                        input.focus();
+                        // 绑定回车事件
+                        input.addEventListener('keyup', (e) => {
+                            if (e.key === 'Enter') checkPasswordAndClose(id);
+                        });
+                    }
+                }
+            });
+        }
+
+        // 新增：独立的验证函数（必须暴露在全局，否则 onclick 找不到）
+        window.checkPasswordAndClose = function(id) {
+            const input = document.getElementById('cute-password');
+            const password = input.value;
+
+            if (!password) {
+                Swal.showValidationMessage('🔑 密钥不能为空哦'); // 使用 SweetAlert 自带的轻量提示
+                input.classList.add('shake'); // 以后可以加个抖动动画
+                setTimeout(() => input.classList.remove('shake'), 500);
+                return;
+            }
+
+            if (password !== 'yss123456') {
+                Swal.showValidationMessage(' 哎呀，密钥不对呢');
+                return;
+            }
+
+            // 密码正确
+            messages = messages.filter((m) => m.id !== id);
+            saveMessages();
+            displayMessages();
+            renderWordCloud();
+            
+            Swal.close(); // 关闭信封
+
+            // 成功提示也换成可爱的 Toast
+            Swal.fire({
+                icon: 'success',
+                title: '✨ 噗！回忆已消散',
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 2000,
+                background: '#FFFAF0',
+                color: '#2C5282'
+            });
+        };
+
+
+                function renderWordCloud() {
+            const cloud = document.getElementById("wordCloud");
+            if (!cloud) return;
+
+            // --- 1. 强制更新动画样式 (关键步骤) ---
+            // 先移除旧样式，防止缓存
+            const oldStyle = document.getElementById('cloud-anim-style');
+            if (oldStyle) oldStyle.remove();
+
+            // 注入新的双轴动画样式
+            const style = document.createElement('style');
+            style.id = 'cloud-anim-style';
+            style.textContent = `
+                @keyframes floatX {
+                    0% { transform: translateX(calc(var(--mx) * -1)); }
+                    100% { transform: translateX(var(--mx)); }
+                }
+                @keyframes floatY {
+                    0% { transform: translateY(calc(var(--my) * -1)); }
+                    100% { transform: translateY(var(--my)); }
+                }
+                /* 单词的容器 */
+                .cloud-item {
+                    position: absolute;
+                    display: inline-block;
+                    cursor: default;
+                    white-space: nowrap;
+                    will-change: transform; /* 性能优化 */
+                }
+                /* 内部包裹层：负责旋转，避免与位移冲突 */
+                .cloud-item-inner {
+                    display: inline-block;
+                }
+            `;
+            document.head.appendChild(style);
+
+            cloud.innerHTML = "";
+
+            // --- 2. 关键词提取 (保持不变) ---
+            const stopWords = new Set([
+                "这个", "那个", "就是", "什么", "所以", "因为", "我们", "你们", "他们", 
+                "但是", "如果", "哈哈", "一个", "真的", "非常", "觉得", "可以", "还是",
+                "以及", "而且", "虽然", "不过", "留言", "你好", "名字", "的", "了", "是"
+            ]);
+
+            let segmenter;
+            try {
+                segmenter = new Intl.Segmenter('zh-CN', { granularity: 'word' });
+            } catch (e) { /* ignore */ }
+
+            const freq = new Map();
+            messages.forEach((msg) => {
+                const content = (msg.content || "").trim();
+                if (!content) return;
+                if (segmenter) {
+                    const segments = segmenter.segment(content);
+                    for (const { segment, isWordLike } of segments) {
+                        if (isWordLike && segment.length >= 2 && segment.length <= 5 && !stopWords.has(segment)) {
+                            freq.set(segment, (freq.get(segment) || 0) + 1);
+                        }
+                    }
+                } else {
+                    const matches = content.match(/[\u4e00-\u9fa5]{2,5}/g) || [];
+                    matches.forEach(word => !stopWords.has(word) && freq.set(word, (freq.get(word) || 0) + 1));
+                }
+            });
+
+            if (freq.size === 0) {
+                const empty = document.createElement("span");
+                empty.textContent = "等待数据...";
+                empty.style.position = "absolute";
+                empty.style.left = "50%";
+                empty.style.top = "50%";
+                empty.style.transform = "translate(-50%, -50%)";
+                empty.style.opacity = "0.5";
+                cloud.appendChild(empty);
+                return;
+            }
+
+            // --- 3. 生成双轴浮动词云 ---
+            const items = Array.from(freq.entries())
+                .map(([text, count]) => ({ text, count }))
+                .sort((a, b) => b.count - a.count)
+                .slice(0, 40);
+
+            const maxCount = Math.max(...items.map((i) => i.count));
+
+            items.forEach((item, idx) => {
+                // 创建外部容器 (负责 X 和 Y 轴位移)
+                const span = document.createElement("span");
+                span.className = "cloud-item";
+                
+                // 创建内部容器 (负责文字显示和静态旋转)
+                const inner = document.createElement("span");
+                inner.className = "cloud-item-inner";
+                inner.textContent = item.text;
+                span.appendChild(inner);
+
+                // 字体与颜色
+                const weight = item.count / maxCount;
+                span.style.fontSize = Math.round(14 + weight * 26) + "px"; 
+                span.style.color = Math.random() > 0.6 ? "var(--color-deep-blue)" : "var(--color-text)";
+                span.style.opacity = String(0.5 + Math.random() * 0.5);
+
+                // 初始位置 (15% - 85%)
+                const left = 15 + Math.random() * 70;
+                const top = 15 + Math.random() * 70;
+                span.style.left = left + "%";
+                span.style.top = top + "%";
+
+                // 随机旋转
+                const rotate = (Math.random() * 30 - 15);
+                inner.style.transform = `rotate(${rotate}deg)`;
+
+                // --- 核心动画配置 ---
+                // 定义移动范围 (30px - 60px)
+                const moveX = 30 + Math.random() * 30; 
+                const moveY = 30 + Math.random() * 30;
+                span.style.setProperty('--mx', moveX + 'px');
+                span.style.setProperty('--my', moveY + 'px');
+
+                // 随机动画时长 (X轴和Y轴时长不同，制造无序感)
+                // 使用 ease-in-out + alternate (往返运动)，配合双轴错位，消除停顿感
+                const durX = 10 + Math.random() * 10; // 10-20s
+                const durY = 7 + Math.random() * 7;   // 7-14s
+                
+                // 组合动画：X轴动画 + Y轴动画同时进行
+                span.style.animation = `
+                    floatX ${durX}s infinite ease-in-out alternate,
+                    floatY ${durY}s infinite ease-in-out alternate
+                `;
+
+                cloud.appendChild(span);
+            });
+        }
+
+
+
+
+        function submitMessage() {
+            const nameInput = document.getElementById("nameInput");
+            const messageInput = document.getElementById("messageInput");
+            const name = (nameInput?.value || "").trim();
+            const content = (messageInput?.value || "").trim();
+
+            if (!name || !content) {
+                alert("请填写名字和留言内容");
+                return;
+            }
+
+            const now = new Date();
+            const timeStr =
+                now.getFullYear() +
+                "." +
+                String(now.getMonth() + 1).padStart(2, "0") +
+                "." +
+                String(now.getDate()).padStart(2, "0");
+
+            messages.push({
+                id: String(Date.now()) + "-" + String(Math.random()).slice(2),
+                name,
+                content,
+                time: timeStr
+            });
+
+            saveMessages();
+            displayMessages();
+            renderWordCloud();
+
+            nameInput.value = "";
+            messageInput.value = "";
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement("div");
+            div.textContent = String(text ?? "");
+            return div.innerHTML;
+        }
+
+        function renderWordCloud() {
+            const cloud = document.getElementById("wordCloud");
+            if (!cloud) return;
+
+            cloud.innerHTML = "";
+
+            const phrases = messages
+                .map((m) => (m.content || "").trim())
+                .filter(Boolean);
+
+            if (phrases.length === 0) {
+                const empty = document.createElement("span");
+                empty.textContent = "还没有留言，来写第一条吧";
+                empty.style.left = "50%";
+                empty.style.top = "50%";
+                empty.style.fontSize = "18px";
+                empty.style.transform = "translate(-50%, -50%)";
+                cloud.appendChild(empty);
+                return;
+            }
+
+            // Word frequency (simple exact match)
+            const freq = new Map();
+            phrases.forEach((p) => freq.set(p, (freq.get(p) || 0) + 1));
+
+            const items = Array.from(freq.entries())
+                .map(([text, count]) => ({ text, count }))
+                .sort((a, b) => b.count - a.count)
+                .slice(0, 40);
+
+            const maxCount = Math.max(...items.map((i) => i.count));
+
+            items.forEach((item, idx) => {
+                const span = document.createElement("span");
+                span.textContent = item.text;
+
+                const weight = item.count / maxCount; 
+                const fontSize = Math.round(14 + weight * 20); 
+                const left = 10 + Math.random() * 80; 
+                const top = 12 + Math.random() * 76; 
+
+                span.style.fontSize = fontSize + "px";
+                span.style.left = left + "%";
+                span.style.top = top + "%";
+                span.style.opacity = String(0.75 + Math.random() * 0.25);
+
+                const rotate = (idx % 5 === 0) ? (Math.random() * 14 - 7) : 0;
+                span.style.transform = `translate(-50%, -50%) rotate(${rotate}deg)`;
+
+                cloud.appendChild(span);
+            });
+        }
+        
+        // ========== SMOOTH SCROLL ==========
+        function smoothScroll(id) {
+            const element = document.getElementById(id);
+            if (element) {
+                element.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        // ========== INITIALIZATION ==========
+        document.addEventListener('DOMContentLoaded', () => {
+            initParticles();
+            initHeroCanvas();
+            updateDialogue(0);
+            displayMessages();
+            renderWordCloud();
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && e.ctrlKey) {
+                submitMessage();
+            }
+        });
+    </script>
+</body>
+</html>
+```
