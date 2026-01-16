@@ -918,11 +918,72 @@
     transform: scale(1.05);
 }
 
+/* ========== 点赞功能样式 ========== */
+
+/* 消息操作栏 */
+.message-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 8px;
+}
+
+/* 点赞按钮 */
+.btn-like {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    color: #888;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    transition: all 0.2s ease;
+    padding: 4px 8px;
+    border-radius: 12px;
+}
+
+.btn-like:hover {
+    background-color: rgba(232, 139, 165, 0.1);
+    color: #E88BA5;
+}
+
+.btn-like.liked {
+    color: #E88BA5;
+    font-weight: bold;
+}
+
+.btn-like:active {
+    transform: scale(0.9);
+}
+
+/* 飘心特效粒子 */
+.like-particle {
+    position: fixed;
+    pointer-events: none;
+    z-index: 9999;
+    font-size: 24px;
+    animation: floatUp 1s ease-out forwards;
+    user-select: none;
+}
+
+@keyframes floatUp {
+    0% {
+        transform: translate(0, 0) scale(1) rotate(0deg);
+        opacity: 1;
+    }
+    100% {
+        transform: translate(var(--tx), -100px) scale(1.5) rotate(var(--rot));
+        opacity: 0;
+    }
+}
+
 
     </style>
     <!-- SweetAlert2 Dark Theme -->
 <link href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-dark@4/dark.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 </head>
 <body>
@@ -980,8 +1041,8 @@
                         <div class="company">OiiOii动画agent</div>
                         <div class="date">2025.10 - 2025.12</div>
                         <ul>
-                            <li>System Prompt设计：优化AI角色扮演体验，用户留存提升45%</li>
-                            <li>提示词工程：开发自动化提示词生成工具，效率提升80-90%</li>
+                            <li>System Prompt设计：优化AI角色扮演体验，音色一致性提升45%</li>
+                            <li>提示词工程：设计system prompt，效率提升80-90%</li>
                             <li>Cut长视频工作流：设计从脚本到分镜的自动化视频生成方案</li>
                             <li>数据飞轮：构建1200+高质量评测集，模型响应准确率提升60%</li>
                         </ul>
@@ -995,9 +1056,9 @@
                         <div class="company">芒果TV - 智能算法部</div>
                         <div class="date">2025.06 - 2025.09</div>
                         <ul>
-                            <li>内容平台重构：主导AI辅助内容生产平台，月产出内容量翻倍</li>
+                            <li>提示词系统设计：将复杂的自然语言交互重构为“可视化参数面板”</li>
                             <li>模型微调：基于开源模型进行LoRA微调，定制品牌专属风格</li>
-                            <li>跨部门协作：打通技术与美术团队壁垒，落地3个创新AI应用</li>
+                            <li>知识库体系化建设：搭建《山海AIGC平台使用手册》，落地功能指引</li>
                         </ul>
                     </div>
                 </div>
@@ -1009,9 +1070,9 @@
                         <div class="company">讯飞智文 - AIPPT</div>
                         <div class="date">2025.03 - 2025.06</div>
                         <ul>
-                            <li>用户增长：通过精准投放与KOL合作，实现用户增长76w+</li>
-                            <li>模版生态：建立设计师激励机制，模版库扩充14倍</li>
-                            <li>KOL合作：签约头部科技博主，品牌曝光量破千万</li>
+                            <li>用户增长：公众号内容运营，实现用户增长76w+</li>
+                            <li>收集需求：填入产品需求池并按照重要级和需求类别进行分类</li>
+                            <li>KOL合作：参与国内与海外的KOL达人合作和内容投放计划</li>
                         </ul>
                     </div>
                 </div>
@@ -1019,39 +1080,6 @@
         </div>
     </section>
 
-    <!-- SKILLS SECTION -->
-    <section class="skills" id="skills">
-        <div class="container">
-            <h2 class="section-title">技能星图</h2>
-            <div class="skills-grid">
-                <div class="skill-card">
-                    <div class="skill-icon">🎨</div>
-                    <h4>AIGC工具流</h4>
-                    <p>熟练掌握MJ, SD, Runway, Pika等主流生成式AI工具，具备LoRA训练能力。</p>
-                </div>
-                <div class="skill-card">
-                    <div class="skill-icon">🧠</div>
-                    <h4>提示词工程</h4>
-                    <p>精通结构化Prompt编写，擅长通过思维链(CoT)优化模型输出质量。</p>
-                </div>
-                <div class="skill-card">
-                    <div class="skill-icon">📊</div>
-                    <h4>数据分析</h4>
-                    <p>善于通过数据洞察用户需求，构建数据飞轮优化产品体验。</p>
-                </div>
-                <div class="skill-card">
-                    <div class="skill-icon">💡</div>
-                    <h4>产品规划</h4>
-                    <p>具备从0到1的产品设计能力，熟悉敏捷开发流程与用户体验设计。</p>
-                </div>
-                <div class="skill-card">
-                    <div class="skill-icon">🤝</div>
-                    <h4>跨界协作</h4>
-                    <p>能够连接技术、设计与业务团队，将AI技术转化为落地的商业价值。</p>
-                </div>
-            </div>
-        </div>
-    </section>
 
     <!-- INTERACTIVE 3D SECTION -->
     <section class="interactive" id="interactive">
@@ -1069,7 +1097,7 @@
 
             <div class="message-section">
                     <h3>留下你的足迹</h3>
-                    <p style="color: var(--color-text-light); margin-bottom: 20px;">在这座浮空城堡中，每一条留言都是一段新的故事。</p>
+                    <p style="color: var(--color-text-light); margin-bottom: 20px;">Say anything，每一条留言都是一段新的故事。</p>
                     
                     <input type="text" class="message-input" id="nameInput" placeholder="Your Name">
                     <textarea class="message-input" id="messageInput" placeholder="Your Message..."></textarea>
@@ -1088,7 +1116,7 @@
         <div class="contact-content">
             <h2 class="section-title">联系我</h2>
             <p style="color: var(--color-text-light); font-size: 1.1rem; max-width: 600px; margin: 0 auto 40px;">
-                如果你对AI产品、创意设计或数据创新感兴趣，我很期待和你交流。
+                如果你对AI产品、创意设计感兴趣，我很期待和你交流。
             </p>
             
             <div class="contact-info">
@@ -1347,82 +1375,180 @@
             });
         }
 
-        // ========== MESSAGE FUNCTIONALITY (with delete + word cloud) ==========
+               // ========== MESSAGE FUNCTIONALITY (Supabase 版) ============
+
+        // 1. 初始化 Supabase
+        const SUPABASE_URL = 'https://ewlqcfsnmdhvjbgpqbyp.supabase.co'; // ⬅️ 填入 Project URL
+        const SUPABASE_KEY = 'sb_publishable_9p1JpA_jA5zUkZNBDzpTYQ_BCSSoyQQ'; // ⬅️ 填入 anon public Key
+        
+        const { createClient } = supabase;
+        const _supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        // 定义全局变量
         let messages = [];
-        try {
-            messages = JSON.parse(localStorage.getItem("messages") || "[]");
-            if (!Array.isArray(messages)) messages = [];
-        } catch (e) {
-            messages = [];
+
+        // 从云端加载留言
+               async function fetchMessages() {
+            try {
+                // 查询 messages 表
+                const { data, error } = await _supabase
+                    .from('messages')
+                    .select('*')
+                    .order('created_at', { ascending: false })
+                    .limit(100);
+
+                if (error) throw error;
+
+                // 转换数据格式
+                messages = data.map(item => ({
+                    id: item.id,
+                    name: item.name,
+                    content: item.content,
+                    time: item.time_str,
+                    likes: item.likes || 0 // <--- 新增这一行：获取点赞数，默认为0
+                }));
+
+                displayMessages();
+                renderWordCloud();
+            } catch (error) {
+                console.error('加载留言失败:', error);
+            }
         }
 
-        function saveMessages() {
-            localStorage.setItem("messages", JSON.stringify(messages));
-        }
 
-        function displayMessages() {
+                function displayMessages() {
             const display = document.getElementById("messagesDisplay");
             if (!display) return;
-
             display.innerHTML = "";
-
+            
             messages.forEach((msg) => {
                 const msgEl = document.createElement("div");
                 msgEl.className = "message-item";
-                // msgEl.dataset.id = msg.id; // Optional
-
+                
+                // 修改内部 HTML，加入了 message-actions 和 btn-like
                 msgEl.innerHTML = `
-                  <span class="name">${escapeHtml(msg.name)}</span>
-                  <span class="time"> ${escapeHtml(msg.time)}</span>
-                  <button class="message-delete" type="button" aria-label="Delete">删除</button>
-                  <div class="content">${escapeHtml(msg.content)}</div>
+                    <span class="name">${escapeHtml(msg.name)}</span>
+                    <span class="time">${escapeHtml(msg.time)}</span>
+                    <button class="message-delete" type="button" aria-label="Delete">×</button>
+                    <div class="content">${escapeHtml(msg.content)}</div>
+                    
+                    <!-- 新增：点赞区域 -->
+                    <div class="message-actions">
+                        <button class="btn-like" id="like-btn-${msg.id}">
+                            🩷<span class="like-count">${msg.likes}</span>
+                        </button>
+                    </div>
                 `;
-
-                msgEl.querySelector(".message-delete").addEventListener("click", () => {
-                  deleteMessage(msg.id);
+                
+                // 绑定删除事件 (保持原有逻辑)
+                msgEl.querySelector('.message-delete').addEventListener('click', () => {
+                    deleteMessage(msg.id);
                 });
 
+                // 新增：绑定点赞事件
+                const likeBtn = msgEl.querySelector(`#like-btn-${msg.id}`);
+                likeBtn.addEventListener('click', (e) => {
+                    handleLike(msg.id, likeBtn, e);
+                });
+                
                 display.appendChild(msgEl);
             });
-
-            // Auto scroll to bottom
-            display.scrollTop = display.scrollHeight;
         }
 
-                    function deleteMessage(id) {
+        // 提交留言
+        async function submitMessage() {
+            const nameInput = document.getElementById("nameInput");
+            const messageInput = document.getElementById("messageInput");
+
+            const name = nameInput?.value.trim();
+            const content = messageInput?.value.trim();
+
+                        if (!name || !content) {
+                // 替换原本的 alert("请写下你的名字和留言内容哦~");
+                Swal.fire({
+                    title: '',
+                    width: 600,
+                    padding: 0,
+                    background: 'transparent',
+                    showConfirmButton: false, // 隐藏默认按钮，使用自定义按钮
+                    html: `
+                        <div class="envelope-card">
+                            <div class="envelope-heart" style="animation: none; font-size: 48px;">📝</div>
+                            <h2 class="envelope-title">还有空空的地方哦</h2>
+                            <p class="envelope-text">请写下你的名字和留言内容<br>让大家认识一下你吧~</p>
+                            <div class="envelope-actions">
+                                <button onclick="Swal.close()" class="btn-cute btn-confirm">好哒，我去填</button>
+                            </div>
+                        </div>
+                    `
+                });
+                return;
+            }
+
+
+            const now = new Date();
+            const timeStr = now.getFullYear() + '.' + 
+                          String(now.getMonth() + 1).padStart(2, '0') + '.' + 
+                          String(now.getDate()).padStart(2, '0');
+
+            try {
+                // 插入数据到 Supabase
+                const { error } = await _supabase
+                    .from('messages')
+                    .insert([
+                        { name: name, content: content, time_str: timeStr }
+                    ]);
+
+                if (error) throw error;
+
+                // 成功后清空输入框
+                nameInput.value = "";
+                messageInput.value = "";
+                
+                // 刷新列表
+                await fetchMessages();
+                
+                Swal.fire({
+                    icon: 'success',
+                    title: '留言已飞向云端 ☁️',
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    background: '#FFFAF0',
+                    color: '#2C5282'
+                });
+                
+            } catch (error) {
+                console.error('发送失败:', error);
+                alert("发送失败，请检查网络");
+            }
+        }
+
+        // 删除功能
+        function deleteMessage(id) {
             Swal.fire({
-                // 移除默认元素，全靠 html 自定义
                 title: '',
-                icon: '',
                 width: 600,
                 padding: 0,
-                background: 'transparent', // 关键：背景透明
-                showConfirmButton: false, // 隐藏默认按钮
-                showCloseButton: false,
-                allowOutsideClick: true,
-                customClass: {
-                    popup: 'envelope-popup-container'
-                },
+                background: 'transparent',
+                showConfirmButton: false,
                 html: `
                     <div class="envelope-card">
                         <div class="envelope-heart">💌</div>
                         <h2 class="envelope-title">验证邀请函</h2>
-                        <p class="envelope-text">想要删除这条回忆吗？<br>需要滴滴我拿密码：</p>
-                        
-                        <input type="password" id="cute-password" class="cute-input" placeholder="输入密码~ " autofocus>
-                        
+                        <p class="envelope-text">想要删除这条回忆吗？<br>输入密码：</p>
+                        <input type="password" id="cute-password" class="cute-input" placeholder="Password" autofocus>
                         <div class="envelope-actions">
-                            <button onclick="checkPasswordAndClose('${id}')" class="btn-cute btn-confirm">确认删除</button>
-                            <button onclick="Swal.close()" class="btn-cute btn-cancel">我再想想</button>
+                            <button onclick="checkPasswordAndClose(${id})" class="btn-cute btn-confirm">确认删除</button>
+                            <button onclick="Swal.close()" class="btn-cute btn-cancel">取消</button>
                         </div>
                     </div>
                 `,
                 didOpen: () => {
-                    // 自动聚焦输入框
                     const input = document.getElementById('cute-password');
                     if(input) {
                         input.focus();
-                        // 绑定回车事件
                         input.addEventListener('keyup', (e) => {
                             if (e.key === 'Enter') checkPasswordAndClose(id);
                         });
@@ -1431,216 +1557,41 @@
             });
         }
 
-        // 新增：独立的验证函数（必须暴露在全局，否则 onclick 找不到）
-        window.checkPasswordAndClose = function(id) {
+        // 验证密码并删除
+        window.checkPasswordAndClose = async function(id) {
             const input = document.getElementById('cute-password');
             const password = input.value;
 
-            if (!password) {
-                Swal.showValidationMessage('🔑 密钥不能为空哦'); // 使用 SweetAlert 自带的轻量提示
-                input.classList.add('shake'); // 以后可以加个抖动动画
-                setTimeout(() => input.classList.remove('shake'), 500);
-                return;
-            }
-
-            if (password !== 'yss123456') {
+            if (password !== 'ssyuan023') {
                 Swal.showValidationMessage(' 哎呀，密钥不对呢');
                 return;
             }
 
-            // 密码正确
-            messages = messages.filter((m) => m.id !== id);
-            saveMessages();
-            displayMessages();
-            renderWordCloud();
-            
-            Swal.close(); // 关闭信封
-
-            // 成功提示也换成可爱的 Toast
-            Swal.fire({
-                icon: 'success',
-                title: '✨ 噗！回忆已消散',
-                toast: true,
-                position: 'top-end',
-                showConfirmButton: false,
-                timer: 2000,
-                background: '#FFFAF0',
-                color: '#2C5282'
-            });
-        };
-
-
-                function renderWordCloud() {
-            const cloud = document.getElementById("wordCloud");
-            if (!cloud) return;
-
-            // --- 1. 强制更新动画样式 (关键步骤) ---
-            // 先移除旧样式，防止缓存
-            const oldStyle = document.getElementById('cloud-anim-style');
-            if (oldStyle) oldStyle.remove();
-
-            // 注入新的双轴动画样式
-            const style = document.createElement('style');
-            style.id = 'cloud-anim-style';
-            style.textContent = `
-                @keyframes floatX {
-                    0% { transform: translateX(calc(var(--mx) * -1)); }
-                    100% { transform: translateX(var(--mx)); }
-                }
-                @keyframes floatY {
-                    0% { transform: translateY(calc(var(--my) * -1)); }
-                    100% { transform: translateY(var(--my)); }
-                }
-                /* 单词的容器 */
-                .cloud-item {
-                    position: absolute;
-                    display: inline-block;
-                    cursor: default;
-                    white-space: nowrap;
-                    will-change: transform; /* 性能优化 */
-                }
-                /* 内部包裹层：负责旋转，避免与位移冲突 */
-                .cloud-item-inner {
-                    display: inline-block;
-                }
-            `;
-            document.head.appendChild(style);
-
-            cloud.innerHTML = "";
-
-            // --- 2. 关键词提取 (保持不变) ---
-            const stopWords = new Set([
-                "这个", "那个", "就是", "什么", "所以", "因为", "我们", "你们", "他们", 
-                "但是", "如果", "哈哈", "一个", "真的", "非常", "觉得", "可以", "还是",
-                "以及", "而且", "虽然", "不过", "留言", "你好", "名字", "的", "了", "是"
-            ]);
-
-            let segmenter;
             try {
-                segmenter = new Intl.Segmenter('zh-CN', { granularity: 'word' });
-            } catch (e) { /* ignore */ }
+                const { error } = await _supabase
+                    .from('messages')
+                    .delete()
+                    .eq('id', id);
 
-            const freq = new Map();
-            messages.forEach((msg) => {
-                const content = (msg.content || "").trim();
-                if (!content) return;
-                if (segmenter) {
-                    const segments = segmenter.segment(content);
-                    for (const { segment, isWordLike } of segments) {
-                        if (isWordLike && segment.length >= 2 && segment.length <= 5 && !stopWords.has(segment)) {
-                            freq.set(segment, (freq.get(segment) || 0) + 1);
-                        }
-                    }
-                } else {
-                    const matches = content.match(/[\u4e00-\u9fa5]{2,5}/g) || [];
-                    matches.forEach(word => !stopWords.has(word) && freq.set(word, (freq.get(word) || 0) + 1));
-                }
-            });
+                if (error) throw error;
 
-            if (freq.size === 0) {
-                const empty = document.createElement("span");
-                empty.textContent = "等待数据...";
-                empty.style.position = "absolute";
-                empty.style.left = "50%";
-                empty.style.top = "50%";
-                empty.style.transform = "translate(-50%, -50%)";
-                empty.style.opacity = "0.5";
-                cloud.appendChild(empty);
-                return;
-            }
-
-            // --- 3. 生成双轴浮动词云 ---
-            const items = Array.from(freq.entries())
-                .map(([text, count]) => ({ text, count }))
-                .sort((a, b) => b.count - a.count)
-                .slice(0, 40);
-
-            const maxCount = Math.max(...items.map((i) => i.count));
-
-            items.forEach((item, idx) => {
-                // 创建外部容器 (负责 X 和 Y 轴位移)
-                const span = document.createElement("span");
-                span.className = "cloud-item";
+                Swal.close();
+                await fetchMessages();
                 
-                // 创建内部容器 (负责文字显示和静态旋转)
-                const inner = document.createElement("span");
-                inner.className = "cloud-item-inner";
-                inner.textContent = item.text;
-                span.appendChild(inner);
-
-                // 字体与颜色
-                const weight = item.count / maxCount;
-                span.style.fontSize = Math.round(14 + weight * 26) + "px"; 
-                span.style.color = Math.random() > 0.6 ? "var(--color-deep-blue)" : "var(--color-text)";
-                span.style.opacity = String(0.5 + Math.random() * 0.5);
-
-                // 初始位置 (15% - 85%)
-                const left = 15 + Math.random() * 70;
-                const top = 15 + Math.random() * 70;
-                span.style.left = left + "%";
-                span.style.top = top + "%";
-
-                // 随机旋转
-                const rotate = (Math.random() * 30 - 15);
-                inner.style.transform = `rotate(${rotate}deg)`;
-
-                // --- 核心动画配置 ---
-                // 定义移动范围 (30px - 60px)
-                const moveX = 30 + Math.random() * 30; 
-                const moveY = 30 + Math.random() * 30;
-                span.style.setProperty('--mx', moveX + 'px');
-                span.style.setProperty('--my', moveY + 'px');
-
-                // 随机动画时长 (X轴和Y轴时长不同，制造无序感)
-                // 使用 ease-in-out + alternate (往返运动)，配合双轴错位，消除停顿感
-                const durX = 10 + Math.random() * 10; // 10-20s
-                const durY = 7 + Math.random() * 7;   // 7-14s
-                
-                // 组合动画：X轴动画 + Y轴动画同时进行
-                span.style.animation = `
-                    floatX ${durX}s infinite ease-in-out alternate,
-                    floatY ${durY}s infinite ease-in-out alternate
-                `;
-
-                cloud.appendChild(span);
-            });
-        }
-
-
-
-
-        function submitMessage() {
-            const nameInput = document.getElementById("nameInput");
-            const messageInput = document.getElementById("messageInput");
-            const name = (nameInput?.value || "").trim();
-            const content = (messageInput?.value || "").trim();
-
-            if (!name || !content) {
-                alert("请填写名字和留言内容");
-                return;
+                Swal.fire({
+                    icon: 'success',
+                    title: '删除成功 ✨',
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    background: '#FFFAF0',
+                    color: '#2C5282'
+                });
+            } catch (error) {
+                console.error(error);
+                Swal.showValidationMessage('删除失败');
             }
-
-            const now = new Date();
-            const timeStr =
-                now.getFullYear() +
-                "." +
-                String(now.getMonth() + 1).padStart(2, "0") +
-                "." +
-                String(now.getDate()).padStart(2, "0");
-
-            messages.push({
-                id: String(Date.now()) + "-" + String(Math.random()).slice(2),
-                name,
-                content,
-                time: timeStr
-            });
-
-            saveMessages();
-            displayMessages();
-            renderWordCloud();
-
-            nameInput.value = "";
-            messageInput.value = "";
         }
 
         function escapeHtml(text) {
@@ -1649,15 +1600,13 @@
             return div.innerHTML;
         }
 
+        // 保持原有的 renderWordCloud 不变
         function renderWordCloud() {
             const cloud = document.getElementById("wordCloud");
             if (!cloud) return;
 
             cloud.innerHTML = "";
-
-            const phrases = messages
-                .map((m) => (m.content || "").trim())
-                .filter(Boolean);
+            const phrases = messages.map((m) => (m.content || "").trim()).filter(Boolean);
 
             if (phrases.length === 0) {
                 const empty = document.createElement("span");
@@ -1669,8 +1618,8 @@
                 cloud.appendChild(empty);
                 return;
             }
-
-            // Word frequency (simple exact match)
+            
+            // 下面是你原来的词云逻辑，原封不动即可
             const freq = new Map();
             phrases.forEach((p) => freq.set(p, (freq.get(p) || 0) + 1));
 
@@ -1684,24 +1633,76 @@
             items.forEach((item, idx) => {
                 const span = document.createElement("span");
                 span.textContent = item.text;
-
                 const weight = item.count / maxCount; 
                 const fontSize = Math.round(14 + weight * 20); 
                 const left = 10 + Math.random() * 80; 
                 const top = 12 + Math.random() * 76; 
-
                 span.style.fontSize = fontSize + "px";
                 span.style.left = left + "%";
                 span.style.top = top + "%";
                 span.style.opacity = String(0.75 + Math.random() * 0.25);
-
                 const rotate = (idx % 5 === 0) ? (Math.random() * 14 - 7) : 0;
                 span.style.transform = `translate(-50%, -50%) rotate(${rotate}deg)`;
-
                 cloud.appendChild(span);
             });
         }
-        
+                // ========== 点赞与特效功能 ==========
+
+        // 处理点赞逻辑
+        async function handleLike(id, btn, event) {
+            // 1. 触发特效 (传入点击时的鼠标位置)
+            createCuteEffects(event.clientX, event.clientY);
+
+            // 2. 界面立即更新 (乐观更新 UI)
+            const countSpan = btn.querySelector('.like-count');
+            let currentCount = parseInt(countSpan.textContent) || 0;
+            currentCount++;
+            countSpan.textContent = currentCount;
+            btn.classList.add('liked');
+
+            // 3. 提交到数据库
+            try {
+                // 更新 likes 字段
+                const { error } = await _supabase
+                    .from('messages')
+                    .update({ likes: currentCount })
+                    .eq('id', id);
+
+                if (error) throw error;
+            } catch (err) {
+                console.error('点赞同步失败:', err);
+            }
+        }
+
+        // 创建可爱的特效
+        function createCuteEffects(x, y) {
+            const emojis = ['❤️', '💖', '🌸', '✨', '🥰', '🐰', '🍓', '🍬'];
+            const particleCount = 5; // 每次点击产生的粒子数量，越多越热闹
+
+            for (let i = 0; i < particleCount; i++) {
+                const el = document.createElement('div');
+                el.innerText = emojis[Math.floor(Math.random() * emojis.length)];
+                el.className = 'like-particle';
+                
+                // 随机位置偏移，让效果更自然
+                const randomX = (Math.random() - 0.5) * 50; 
+                const randomRot = (Math.random() - 0.5) * 60; 
+                
+                el.style.left = `${x}px`;
+                el.style.top = `${y}px`;
+                el.style.setProperty('--tx', `${randomX}px`);
+                el.style.setProperty('--rot', `${randomRot}deg`);
+                
+                document.body.appendChild(el);
+
+                // 动画结束后移除元素，防止页面卡顿
+                setTimeout(() => {
+                    el.remove();
+                }, 1000);
+            }
+        }
+
+
         // ========== SMOOTH SCROLL ==========
         function smoothScroll(id) {
             const element = document.getElementById(id);
@@ -1715,7 +1716,7 @@
             initParticles();
             initHeroCanvas();
             updateDialogue(0);
-            displayMessages();
+            fetchMessages();
             renderWordCloud();
         });
 
