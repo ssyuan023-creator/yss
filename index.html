@@ -918,6 +918,65 @@
     transform: scale(1.05);
 }
 
+/* ========== 点赞功能样式 ========== */
+
+/* 消息操作栏 */
+.message-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 8px;
+}
+
+/* 点赞按钮 */
+.btn-like {
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    color: #888;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    transition: all 0.2s ease;
+    padding: 4px 8px;
+    border-radius: 12px;
+}
+
+.btn-like:hover {
+    background-color: rgba(232, 139, 165, 0.1);
+    color: #E88BA5;
+}
+
+.btn-like.liked {
+    color: #E88BA5;
+    font-weight: bold;
+}
+
+.btn-like:active {
+    transform: scale(0.9);
+}
+
+/* 飘心特效粒子 */
+.like-particle {
+    position: fixed;
+    pointer-events: none;
+    z-index: 9999;
+    font-size: 24px;
+    animation: floatUp 1s ease-out forwards;
+    user-select: none;
+}
+
+@keyframes floatUp {
+    0% {
+        transform: translate(0, 0) scale(1) rotate(0deg);
+        opacity: 1;
+    }
+    100% {
+        transform: translate(var(--tx), -100px) scale(1.5) rotate(var(--rot));
+        opacity: 0;
+    }
+}
+
 
     </style>
     <!-- SweetAlert2 Dark Theme -->
@@ -1329,9 +1388,9 @@
         let messages = [];
 
         // 从云端加载留言
-        async function fetchMessages() {
+               async function fetchMessages() {
             try {
-                // 查询 messages 表，按创建时间倒序
+                // 查询 messages 表
                 const { data, error } = await _supabase
                     .from('messages')
                     .select('*')
@@ -1340,23 +1399,24 @@
 
                 if (error) throw error;
 
-                // 转换数据格式以适配现有 UI
+                // 转换数据格式
                 messages = data.map(item => ({
-                    id: item.id, // Supabase 的 ID
+                    id: item.id,
                     name: item.name,
                     content: item.content,
-                    time: item.time_str // 注意我们在数据库建的列名是 time_str
+                    time: item.time_str,
+                    likes: item.likes || 0 // <--- 新增这一行：获取点赞数，默认为0
                 }));
 
                 displayMessages();
                 renderWordCloud();
             } catch (error) {
                 console.error('加载留言失败:', error);
-                // 可以在这里加一个 toast 提示用户加载失败
             }
         }
 
-        function displayMessages() {
+
+                function displayMessages() {
             const display = document.getElementById("messagesDisplay");
             if (!display) return;
             display.innerHTML = "";
@@ -1365,16 +1425,30 @@
                 const msgEl = document.createElement("div");
                 msgEl.className = "message-item";
                 
+                // 修改内部 HTML，加入了 message-actions 和 btn-like
                 msgEl.innerHTML = `
                     <span class="name">${escapeHtml(msg.name)}</span>
                     <span class="time">${escapeHtml(msg.time)}</span>
                     <button class="message-delete" type="button" aria-label="Delete">×</button>
                     <div class="content">${escapeHtml(msg.content)}</div>
+                    
+                    <!-- 新增：点赞区域 -->
+                    <div class="message-actions">
+                        <button class="btn-like" id="like-btn-${msg.id}">
+                            🩷<span class="like-count">${msg.likes}</span>
+                        </button>
+                    </div>
                 `;
                 
-                // 绑定删除事件
+                // 绑定删除事件 (保持原有逻辑)
                 msgEl.querySelector('.message-delete').addEventListener('click', () => {
                     deleteMessage(msg.id);
+                });
+
+                // 新增：绑定点赞事件
+                const likeBtn = msgEl.querySelector(`#like-btn-${msg.id}`);
+                likeBtn.addEventListener('click', (e) => {
+                    handleLike(msg.id, likeBtn, e);
                 });
                 
                 display.appendChild(msgEl);
@@ -1572,6 +1646,62 @@
                 cloud.appendChild(span);
             });
         }
+                // ========== 点赞与特效功能 ==========
+
+        // 处理点赞逻辑
+        async function handleLike(id, btn, event) {
+            // 1. 触发特效 (传入点击时的鼠标位置)
+            createCuteEffects(event.clientX, event.clientY);
+
+            // 2. 界面立即更新 (乐观更新 UI)
+            const countSpan = btn.querySelector('.like-count');
+            let currentCount = parseInt(countSpan.textContent) || 0;
+            currentCount++;
+            countSpan.textContent = currentCount;
+            btn.classList.add('liked');
+
+            // 3. 提交到数据库
+            try {
+                // 更新 likes 字段
+                const { error } = await _supabase
+                    .from('messages')
+                    .update({ likes: currentCount })
+                    .eq('id', id);
+
+                if (error) throw error;
+            } catch (err) {
+                console.error('点赞同步失败:', err);
+            }
+        }
+
+        // 创建可爱的特效
+        function createCuteEffects(x, y) {
+            const emojis = ['❤️', '💖', '🌸', '✨', '🥰', '🐰', '🍓', '🍬'];
+            const particleCount = 5; // 每次点击产生的粒子数量，越多越热闹
+
+            for (let i = 0; i < particleCount; i++) {
+                const el = document.createElement('div');
+                el.innerText = emojis[Math.floor(Math.random() * emojis.length)];
+                el.className = 'like-particle';
+                
+                // 随机位置偏移，让效果更自然
+                const randomX = (Math.random() - 0.5) * 50; 
+                const randomRot = (Math.random() - 0.5) * 60; 
+                
+                el.style.left = `${x}px`;
+                el.style.top = `${y}px`;
+                el.style.setProperty('--tx', `${randomX}px`);
+                el.style.setProperty('--rot', `${randomRot}deg`);
+                
+                document.body.appendChild(el);
+
+                // 动画结束后移除元素，防止页面卡顿
+                setTimeout(() => {
+                    el.remove();
+                }, 1000);
+            }
+        }
+
 
         // ========== SMOOTH SCROLL ==========
         function smoothScroll(id) {
