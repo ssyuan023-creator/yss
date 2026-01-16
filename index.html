@@ -982,8 +982,8 @@
                         <div class="company">OiiOii动画agent</div>
                         <div class="date">2025.10 - 2025.12</div>
                         <ul>
-                            <li>System Prompt设计：优化AI角色扮演体验，用户留存提升45%</li>
-                            <li>提示词工程：开发自动化提示词生成工具，效率提升80-90%</li>
+                            <li>System Prompt设计：优化AI角色扮演体验，音色一致性提升45%</li>
+                            <li>提示词工程：设计system prompt，效率提升80-90%</li>
                             <li>Cut长视频工作流：设计从脚本到分镜的自动化视频生成方案</li>
                             <li>数据飞轮：构建1200+高质量评测集，模型响应准确率提升60%</li>
                         </ul>
@@ -997,9 +997,9 @@
                         <div class="company">芒果TV - 智能算法部</div>
                         <div class="date">2025.06 - 2025.09</div>
                         <ul>
-                            <li>内容平台重构：主导AI辅助内容生产平台，月产出内容量翻倍</li>
+                            <li>提示词系统设计：将复杂的自然语言交互重构为“可视化参数面板”</li>
                             <li>模型微调：基于开源模型进行LoRA微调，定制品牌专属风格</li>
-                            <li>跨部门协作：打通技术与美术团队壁垒，落地3个创新AI应用</li>
+                            <li>知识库体系化建设：搭建《山海AIGC平台使用手册》，落地功能指引</li>
                         </ul>
                     </div>
                 </div>
@@ -1011,9 +1011,9 @@
                         <div class="company">讯飞智文 - AIPPT</div>
                         <div class="date">2025.03 - 2025.06</div>
                         <ul>
-                            <li>用户增长：通过精准投放与KOL合作，实现用户增长76w+</li>
-                            <li>模版生态：建立设计师激励机制，模版库扩充14倍</li>
-                            <li>KOL合作：签约头部科技博主，品牌曝光量破千万</li>
+                            <li>用户增长：公众号内容运营，实现用户增长76w+</li>
+                            <li>收集需求：填入产品需求池并按照重要级和需求类别进行分类</li>
+                            <li>KOL合作：参与国内与海外的KOL达人合作和内容投放计划</li>
                         </ul>
                     </div>
                 </div>
@@ -1021,39 +1021,6 @@
         </div>
     </section>
 
-    <!-- SKILLS SECTION -->
-    <section class="skills" id="skills">
-        <div class="container">
-            <h2 class="section-title">技能星图</h2>
-            <div class="skills-grid">
-                <div class="skill-card">
-                    <div class="skill-icon">🎨</div>
-                    <h4>AIGC工具流</h4>
-                    <p>熟练掌握MJ, SD, Runway, Pika等主流生成式AI工具，具备LoRA训练能力。</p>
-                </div>
-                <div class="skill-card">
-                    <div class="skill-icon">🧠</div>
-                    <h4>提示词工程</h4>
-                    <p>精通结构化Prompt编写，擅长通过思维链(CoT)优化模型输出质量。</p>
-                </div>
-                <div class="skill-card">
-                    <div class="skill-icon">📊</div>
-                    <h4>数据分析</h4>
-                    <p>善于通过数据洞察用户需求，构建数据飞轮优化产品体验。</p>
-                </div>
-                <div class="skill-card">
-                    <div class="skill-icon">💡</div>
-                    <h4>产品规划</h4>
-                    <p>具备从0到1的产品设计能力，熟悉敏捷开发流程与用户体验设计。</p>
-                </div>
-                <div class="skill-card">
-                    <div class="skill-icon">🤝</div>
-                    <h4>跨界协作</h4>
-                    <p>能够连接技术、设计与业务团队，将AI技术转化为落地的商业价值。</p>
-                </div>
-            </div>
-        </div>
-    </section>
 
     <!-- INTERACTIVE 3D SECTION -->
     <section class="interactive" id="interactive">
@@ -1071,7 +1038,7 @@
 
             <div class="message-section">
                     <h3>留下你的足迹</h3>
-                    <p style="color: var(--color-text-light); margin-bottom: 20px;">在这座浮空城堡中，每一条留言都是一段新的故事。</p>
+                    <p style="color: var(--color-text-light); margin-bottom: 20px;">Say anything，每一条留言都是一段新的故事。</p>
                     
                     <input type="text" class="message-input" id="nameInput" placeholder="Your Name">
                     <textarea class="message-input" id="messageInput" placeholder="Your Message..."></textarea>
@@ -1090,7 +1057,7 @@
         <div class="contact-content">
             <h2 class="section-title">联系我</h2>
             <p style="color: var(--color-text-light); font-size: 1.1rem; max-width: 600px; margin: 0 auto 40px;">
-                如果你对AI产品、创意设计或数据创新感兴趣，我很期待和你交流。
+                如果你对AI产品、创意设计感兴趣，我很期待和你交流。
             </p>
             
             <div class="contact-info">
@@ -1422,10 +1389,28 @@
             const name = nameInput?.value.trim();
             const content = messageInput?.value.trim();
 
-            if (!name || !content) {
-                alert("请写下你的名字和留言内容哦~");
+                        if (!name || !content) {
+                // 替换原本的 alert("请写下你的名字和留言内容哦~");
+                Swal.fire({
+                    title: '',
+                    width: 600,
+                    padding: 0,
+                    background: 'transparent',
+                    showConfirmButton: false, // 隐藏默认按钮，使用自定义按钮
+                    html: `
+                        <div class="envelope-card">
+                            <div class="envelope-heart" style="animation: none; font-size: 48px;">📝</div>
+                            <h2 class="envelope-title">还有空空的地方哦</h2>
+                            <p class="envelope-text">请写下你的名字和留言内容<br>让大家认识一下你吧~</p>
+                            <div class="envelope-actions">
+                                <button onclick="Swal.close()" class="btn-cute btn-confirm">好哒，我去填</button>
+                            </div>
+                        </div>
+                    `
+                });
                 return;
             }
+
 
             const now = new Date();
             const timeStr = now.getFullYear() + '.' + 
@@ -1503,7 +1488,7 @@
             const input = document.getElementById('cute-password');
             const password = input.value;
 
-            if (password !== 'yss123456') {
+            if (password !== 'ssyuan023') {
                 Swal.showValidationMessage(' 哎呀，密钥不对呢');
                 return;
             }
