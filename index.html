@@ -1845,34 +1845,6 @@
     updateDialogue(0);
     fetchMessages();
     renderWordCloud();
-    
-    // ✅ 新增：手机端专属提示
-    if (window.innerWidth <= 768) {
-        // 稍微延迟一点弹出，体验更好
-        setTimeout(() => {
-            Swal.fire({
-                title: '',
-                width: 600,
-                padding: 0,
-                background: 'transparent',
-                showConfirmButton: false,
-                html: `
-                    <div class="envelope-card">
-                        <div class="envelope-heart">💌</div>
-                        <h2 class="envelope-title">验证邀请函</h2>
-                        <p class="envelope-text">想要删除这条回忆吗？<br>输入密码：</p>
-                        <input type="password" id="cute-password" class="cute-input" placeholder="Password" autofocus>
-                        <div class="envelope-actions">
-                            <button onclick="checkPasswordAndClose(${id})" class="btn-cute btn-confirm">确认删除</button>
-                            <button onclick="Swal.close()" class="btn-cute btn-cancel">取消</button>
-                        </div>
-                    </div>
-                }
-            });
-        }, 1000); // 1秒后弹出
-    }
-});
-
 
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Enter' && e.ctrlKey) {
