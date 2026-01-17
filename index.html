@@ -1410,9 +1410,26 @@
 
                 displayMessages();
                 renderWordCloud();
-            } catch (error) {
-                console.error('加载留言失败:', error);
-            }
+         } catch (error) {
+    console.error('发送失败:', error);
+
+    Swal.fire({
+        icon: 'warning', // 使用警告图标比错误图标更柔和
+        title: '哎呀，发送受阻',
+        text: '留言未能发出，切换成流量试试哦',
+        showCancelButton: true,
+        confirmButtonText: '重试',
+        cancelButtonText: '稍后再说',
+        confirmButtonColor: '#2C5282', // 使用你原本的主题色
+        cancelButtonColor: '#A0AEC0',
+        reverseButtons: true
+    }).then((result) => {
+        if (result.isConfirmed) {
+            sendMessage(); // 用户点击重试后，重新调用发送函数
+        }
+    });
+}
+
         }
 
 
