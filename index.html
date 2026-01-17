@@ -1082,11 +1082,7 @@
    📱 Mobile: 每个 Section 单独一屏背景
    =========================== */
 @media screen and (max-width: 768px) {
-  /* 1) 手机端禁用整页一张大背景（否则会出现“拉伸一张图”） */
-  body {
-    background-image: none !important;
-    background-attachment: scroll !important;
-  }
+
 
   /* 2) 让每个 section 自己带背景图：每屏一张 */
   section.hero,
@@ -1107,18 +1103,6 @@
     height: 100vh;
   }
 
-  /* 4) 可选：为了文字清晰，给每个 section 加一层淡淡遮罩 */
-  section.hero::before,
-  section.about::before,
-  section.experience::before,
-  section.interactive::before,
-  section.contact::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: rgba(255, 250, 240, 0.35); /* 米色薄雾，更温柔 */
-    pointer-events: none;
-  }
 
   /* 5) 关键：section 需要能承载伪元素遮罩 */
   section.hero,
