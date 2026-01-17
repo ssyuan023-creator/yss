@@ -1851,20 +1851,22 @@
         // 稍微延迟一点弹出，体验更好
         setTimeout(() => {
             Swal.fire({
-                title: '温馨提示 ✨',
-                text: '电脑端看效果更好哦~',
-                icon: 'info', // 或者用 'question'
-                width: 300,
-                padding: '1em',
-                background: '#fff',
-                backdrop: `
-                    rgba(0,0,123,0.1)
-                `,
-                confirmButtonText: '知道啦',
-                confirmButtonColor: '#E88BA5', // 配合你的粉色主题
-                customClass: {
-                    title: 'cute-title',
-                    popup: 'cute-popup'
+                title: '',
+                width: 600,
+                padding: 0,
+                background: 'transparent',
+                showConfirmButton: false,
+                html: `
+                    <div class="envelope-card">
+                        <div class="envelope-heart">💌</div>
+                        <h2 class="envelope-title">验证邀请函</h2>
+                        <p class="envelope-text">想要删除这条回忆吗？<br>输入密码：</p>
+                        <input type="password" id="cute-password" class="cute-input" placeholder="Password" autofocus>
+                        <div class="envelope-actions">
+                            <button onclick="checkPasswordAndClose(${id})" class="btn-cute btn-confirm">确认删除</button>
+                            <button onclick="Swal.close()" class="btn-cute btn-cancel">取消</button>
+                        </div>
+                    </div>
                 }
             });
         }, 1000); // 1秒后弹出
