@@ -1078,28 +1078,55 @@
                 transform: scale(0.8); /* 缩小一点 */
             }
         }
-  /* =========================================
-           📱 移动端背景图适配
-           说明：手机端优先加载这张竖屏/方形构图的城堡背景
+         /* =========================================
+           📱 移动端背景优化：每页独立背景
            ========================================= */
         @media screen and (max-width: 768px) {
+            
+            /* 1. 清除 body 的全局大背景，防止干扰 */
             body {
-                /* 覆盖默认背景，使用新的城堡图 */
+                background-image: none !important;
+                background-color: var(--color-bg); /* 兜底颜色 */
+            }
+
+            /* 2. 给每一个主要板块单独设置背景图 */
+            .hero, 
+            .about, 
+            .experience, 
+            .interactive, 
+            .contact {
+                /* 设定背景图 */
                 background-image: url('generated-image-1.jpg') !important;
                 
-                /* 适配手机竖屏 */
-                background-position: center top; /* 图片靠上对齐，露出城堡尖顶 */
-                background-size: cover;          /* 填满屏幕 */
-                background-attachment: scroll;   /* 手机上 scroll 比 fixed 性能更好且不容易出 bug */
+                /* 关键设置：让背景图在每个板块里都完整展示 */
+                background-size: cover;          /* 填满当前板块 */
+                background-position: center top; /* 从顶部开始显示城堡尖顶 */
+                background-repeat: no-repeat;
+                
+                /* 稍微加一点内边距，防止内容贴边 */
+                padding-top: 60px; 
+                padding-bottom: 60px;
+                
+                /* 确保每个板块之间有清晰的界限（可选） */
+                border-bottom: 2px solid rgba(255,255,255,0.3);
             }
-            
-            /* 如果 Hero 区域也有独立背景，也需要覆盖 */
+
+            /* 3. 特殊处理 Hero 区域 (首页第一屏) */
             .hero {
-                background-image: none !important; /* 让 body 的城堡背景透出来 */
-                background: rgba(0, 0, 0, 0.1); /* 加一点淡淡的遮罩让文字更清晰 */
+                height: 100vh; /* 只有首页保持全屏高度 */
+                min-height: 600px;
+            }
+
+            /* 4. 为了让文字在背景上看得清，给内容加一层淡淡的白底容器 (可选优化) */
+            .experience .container,
+            .interactive .container,
+            .contact .contact-content {
+                background: rgba(255, 255, 255, 0.65); /* 半透明白底 */
+                padding: 20px;
+                border-radius: 20px;
+                backdrop-filter: blur(5px); /* 磨砂玻璃效果 */
             }
         }
-
 
 
     </style>
