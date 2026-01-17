@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>美好的瞬间 | 照片墙</title>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
+    <style>
+        :root {
+            --color-bg: #FFFAF0;
+            --color-primary: #2C5282;
+            --color-pink: #E88BA5;
+            --color-text: #2D3748;
+        }
+
+        body {
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+            background-color: var(--color-bg);
+            color: var(--color-text);
+            margin: 0;
+            padding-bottom: 50px;
+        }
+
+        /* 顶部导航 */
+        .top-bar {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 0.8rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .home-link { text-decoration: none; color: var(--color-primary); font-weight: bold; }
+
+        /* 上传区 */
+        .upload-area {
+            background: white;
+            padding: 1rem;
+            border-radius: 16px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            margin: 1.5rem auto;
+            max-width: 700px; /* 稍微窄一点 */
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .input-style {
+            padding: 8px 12px;
+            border: 1px solid #E2E8F0;
+            border-radius: 20px; /* 圆润一点 */
+            outline: none;
+            font-size: 0.9rem;
+            background: #F7FAFC;
+        }
+
+        /* === 核心布局修改：Grid 双列布局 === */
+        .photo-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+            display: grid;
+            /* 电脑端显示2列，平板2列，手机1列 */
+            grid-template-columns: repeat(auto-fill, minmax(450px, 1fr));
+            gap: 25px;
+        }
+        @media (max-width: 500px) {
+            .photo-grid { grid-template-columns: 1fr; }
+        }
+
+        /* 单个卡片 */
+        .photo-card {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            transition: transform 0.2s;
+            height: 550px; /* 固定高度，防止长短不一 */
+        }
+        .photo-card:hover { transform: translateY(-3px); }
+
+        /* 上半部分：图片区 (占 55% 高度) */
+        .card-image-area {
+            height: 55%;
+            background: #FFFAF0; 
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        .card-image-area img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain; /* 完整显示不裁切 */
+        }
+
+        /* 下半部分：评论区 (占 45% 高度) */
+        .card-chat-area {
+            height: 45%;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            background: #fff;
+            position: relative;
+        }
+
+        .chat-header {
+            font-size: 0.8rem;
+            color: #A0AEC0;
+            margin-bottom: 8px;
+            padding-bottom: 5px;
+            border-bottom: 1px solid #f0f0f0;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        /* 滚动列表：必须限制高度，否则会撑开 */
+        .bubble-list {
+            flex: 1;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            padding-right: 5px;
+            margin-bottom: 8px;
+        }
+
+        /* 气泡样式 */
+        .bubble-row { display: flex; flex-direction: column; max-width: 90%; }
+        .bubble-row.mine { align-self: flex-end; align-items: flex-end; }
+        .bubble-row.others { align-self: flex-start; align-items: flex-start; }
+
+        .bubble-author { font-size: 0.7rem; color: #CBD5E0; margin-bottom: 2px; margin-left: 5px; }
+        .bubble-row.mine .bubble-author { margin-right: 5px; }
+
+        .bubble {
+            padding: 6px 12px;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            line-height: 1.4;
+            word-wrap: break-word;
+        }
+        .bubble-row.others .bubble { background: #F0F4F8; color: #4A5568; border-bottom-left-radius: 2px; }
+        .bubble-row.mine .bubble { background: #FFF5F7; color: #97266D; border-bottom-right-radius: 2px; }
+
+        /* 底部输入框 */
+        .mini-input-group {
+            display: flex;
+            gap: 5px;
+        }
+        .mini-btn {
+            background: var(--color-primary);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            cursor: pointer;
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
+        }
+
+        /* === 复刻首页粉色删除按钮 === */
+        .delete-btn-pink {
+            position: absolute;
+            top: 10px;
+            right: 10px; /* 放右上角 */
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.9);
+            border: 2px solid var(--color-pink);
+            color: var(--color-pink);
+            font-size: 18px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            transition: all 0.2s;
+            opacity: 0.8;
+        }
+        .delete-btn-pink:hover {
+            background: var(--color-pink);
+            color: white;
+            opacity: 1;
+            transform: scale(1.1);
+        }
+
+        /* === 首页同款：信封弹窗样式 (必须加) === */
+        .envelope-card {
+            background: #fff;
+            border-radius: 20px;
+            padding: 20px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .envelope-heart { font-size: 40px; margin-bottom: 10px; }
+        .envelope-title { color: #2C5282; font-size: 1.2rem; margin-bottom: 10px; }
+        .envelope-text { color: #718096; font-size: 0.95rem; margin-bottom: 20px; line-height: 1.6; }
+        .cute-input {
+            width: 80%;
+            padding: 10px;
+            border: 2px solid #E2E8F0;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 1rem;
+            outline: none;
+        }
+        .cute-input:focus { border-color: var(--color-pink); }
+        .envelope-actions { display: flex; justify-content: center; gap: 15px; }
+        .btn-cute {
+            padding: 8px 25px;
+            border-radius: 20px;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            transition: transform 0.1s;
+        }
+        .btn-confirm { background: var(--color-pink); color: white; }
+        .btn-cancel { background: #EDF2F7; color: #718096; }
+        .btn-cute:active { transform: scale(0.95); }
+
+                /* === 粒子特效样式 (搬运自 index.html) === */
+        .like-particle {
+            position: fixed;
+            pointer-events: none;
+            font-size: 24px;
+            animation: fly-away 1s ease-out forwards;
+            z-index: 9999;
+        }
+        @keyframes fly-away {
+            0% { transform: translate(0, 0) rotate(0deg) scale(1); opacity: 1; }
+            100% { transform: translate(var(--tx), -100px) rotate(var(--rot)) scale(0); opacity: 0; }
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="top-bar">
+        <a href="index.html" class="home-link">← 返回首页</a>
+        <div style="font-weight:bold; color:var(--color-primary);">✨ 时光相册</div>
+    </div>
+
+    <!-- 上传区 -->
+    <div class="upload-area">
+        <button onclick="document.getElementById('photoInput').click()" style="background:#EDF2F7; color:#4A5568; border:none; padding:8px 15px; border-radius:20px; cursor:pointer; font-weight:500;">📷 选张照片</button>
+        <input type="file" id="photoInput" accept="image/*" style="display:none" onchange="updateFileName()">
+        <span id="fileName" style="font-size:0.8rem; color:#A0AEC0; max-width:80px; overflow:hidden; white-space:nowrap;"></span>
+        
+        <input type="text" id="uploaderName" class="input-style" placeholder="你的名字" style="width:80px; text-align:center;">
+        <input type="text" id="photoCaption" class="input-style" placeholder="记录这一刻..." style="flex:1; min-width:120px;">
+        
+        <button onclick="uploadPhoto()" id="uploadBtn" style="background:var(--color-primary); color:white; border:none; padding:8px 20px; border-radius:20px; cursor:pointer; font-weight:bold;">发布</button>
+    </div>
+
+    <!-- 核心：双列卡片流 -->
+    <div class="photo-grid" id="photo-grid">
+        <!-- JS 填充内容 -->
+    </div>
+
+    <script>
+        // ================= 配置区 =================
+        const supabaseUrl = 'https://ewlqcfsnmdhvjbgpqbyp.supabase.co'; 
+        const supabaseKey = 'sb_publishable_9p1JpA_jA5zUkZNBDzpTYQ_BCSSoyQQ'; 
+        const _supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+
+        const savedName = localStorage.getItem('userName') || '';
+        if(savedName) document.getElementById('uploaderName').value = savedName;
+
+        function updateFileName() {
+            const file = document.getElementById('photoInput').files[0];
+            if(file) document.getElementById('fileName').textContent = file.name;
+        }
+
+        // 上传照片
+        async function uploadPhoto() {
+            const fileInput = document.getElementById('photoInput');
+            const nameInput = document.getElementById('uploaderName');
+            const captionInput = document.getElementById('photoCaption');
+            const uploadBtn = document.getElementById('uploadBtn');
+
+            if (fileInput.files.length === 0) return Swal.fire({title:'还没选照片呢', icon:'warning', toast:true, position:'top'});
+            if (!nameInput.value.trim()) return Swal.fire({title:'请告诉我们你是谁', icon:'warning', toast:true, position:'top'});
+
+            localStorage.setItem('userName', nameInput.value.trim());
+
+            try {
+                uploadBtn.textContent = '...';
+                uploadBtn.disabled = true;
+
+                const file = fileInput.files[0];
+                const fileName = `${Date.now()}_${Math.random().toString(36).substr(2)}.${file.name.split('.').pop()}`;
+
+                const { error: upErr } = await _supabase.storage.from('photo-wall').upload(fileName, file);
+                if (upErr) throw upErr;
+
+                const { data: { publicUrl } } = _supabase.storage.from('photo-wall').getPublicUrl(fileName);
+
+                const { error: dbErr } = await _supabase.from('photos').insert([{
+                    image_url: publicUrl,
+                    caption: captionInput.value,
+                    author_name: nameInput.value.trim()
+                }]);
+                if (dbErr) throw dbErr;
+
+                fileInput.value = '';
+                captionInput.value = '';
+                nameInput.value = ''; // 发布后清空名字，防止误用
+                document.getElementById('fileName').textContent = '';
+                loadPhotos();
+                localStorage.removeItem('userName'); 
+
+            
+
+            } catch (err) {
+                console.error(err);
+                Swal.fire('发布失败', err.message, 'error');
+            } finally {
+                uploadBtn.textContent = '发布';
+                uploadBtn.disabled = false;
+            }
+        }
+
+        // 加载列表
+        async function loadPhotos() {
+            const grid = document.getElementById('photo-grid');
+            
+            const { data: photos, error } = await _supabase
+                .from('photos')
+                .select('*, comments(*)')
+                .order('created_at', { ascending: false });
+
+            if (error) { console.error(error); return; }
+
+            if (!photos || photos.length === 0) {
+                grid.innerHTML = '<div style="grid-column:1/-1; text-align:center; padding:4rem; color:#CBD5E0;">还没照片，快来占领封面！📸</div>';
+                return;
+            }
+
+            grid.innerHTML = '';
+
+            for (const photo of photos) {
+                const comments = photo.comments || [];
+                const dateStr = new Date(photo.created_at).toLocaleString('zh-CN', { month: 'numeric', day: 'numeric', hour: '2-digit', minute:'2-digit' });
+                
+                // 留言HTML构建
+                let commentsHtml = '';
+                // 主人
+                if (photo.caption) {
+                    commentsHtml += `
+                        <div class="bubble-row mine">
+                            <span class="bubble-author">${escapeHtml(photo.author_name)} (发布者)</span>
+                            <div class="bubble">${escapeHtml(photo.caption)}</div>
+                        </div>`;
+                }
+                // 访客
+                comments.forEach(c => {
+                    commentsHtml += `
+                        <div class="bubble-row others">
+                            <span class="bubble-author">${escapeHtml(c.author_name)}</span>
+                            <div class="bubble">${escapeHtml(c.content)}</div>
+                        </div>`;
+                });
+
+                const card = document.createElement('div');
+                card.className = 'photo-card';
+                card.innerHTML = `
+                    <button class="delete-btn-pink" onclick="deleteWithStyle(${photo.id})">×</button>
+                    
+                    <div class="card-image-area">
+                        <img src="${photo.image_url}" loading="lazy" onclick="window.open('${photo.image_url}')">
+                    </div>
+                    
+                    <div class="card-chat-area">
+                        <div class="chat-header">
+                            <span>📅 ${dateStr}</span>
+                            <span>@${escapeHtml(photo.author_name || '神秘人')}</span>
+                        </div>
+                        
+                        <div class="bubble-list" id="list-${photo.id}">
+                            ${commentsHtml}
+                        </div>
+                        
+                        <div class="mini-input-group">
+                            <input type="text" id="cn-${photo.id}" class="input-style" placeholder="名字" style="width:60px; font-size:0.8rem; text-align:center;" value="${localStorage.getItem('userName')||''}">
+                            <input type="text" id="cc-${photo.id}" class="input-style" placeholder="回应一下..." style="flex:1;">
+                            <button class="mini-btn" onclick="addComment(${photo.id})">➤</button>
+                        </div>
+                    </div>
+                `;
+                grid.appendChild(card);
+            }
+        }
+
+             // 添加评论 (带特效版)
+        async function addComment(photoId) {
+            const nameInput = document.getElementById(`cn-${photoId}`);
+            const contentInput = document.getElementById(`cc-${photoId}`);
+            const btn = document.querySelector(`#cc-${photoId} + button`); // 获取点击的按钮用于定位特效
+            
+            const name = nameInput.value.trim();
+            const content = contentInput.value.trim();
+
+            if (!name || !content) return Swal.fire({title:'名字内容都要填哦', toast:true, position:'center', timer:1500, showConfirmButton:false});
+            
+            // 1. 触发粒子特效 (在按钮中心炸开)
+            if (btn) {
+                const rect = btn.getBoundingClientRect();
+                createCuteEffects(rect.left + rect.width/2, rect.top + rect.height/2);
+            }
+
+            try {
+                const { error } = await _supabase.from('comments').insert([{ 
+                    photo_id: photoId, 
+                    content: content,
+                    author_name: name 
+                }]);
+                if (error) throw error;
+
+                // 2. 乐观更新 UI
+                const list = document.getElementById(`list-${photoId}`);
+                const row = document.createElement('div');
+                row.className = 'bubble-row others';
+                row.innerHTML = `
+                    <span class="bubble-author">${escapeHtml(name)}</span>
+                    <div class="bubble">${escapeHtml(content)}</div>
+                `;
+                list.appendChild(row);
+                list.scrollTop = list.scrollHeight;
+                
+                // 3. 出现可爱的成功提示 (复刻 index.html)
+                Swal.fire({
+                    icon: 'success',
+                    title: '回应已送达 📨', // 文案改得应景一点
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 2000,
+                    background: '#FFFAF0', // 米色背景
+                    color: '#2C5282'       // 深蓝文字
+                });
+
+                // 4. 清空输入
+                contentInput.value = '';
+                nameInput.value = ''; 
+
+            } catch (err) {
+                console.error(err);
+                Swal.fire('发送失败', err.message, 'error');
+            }
+        }
+
+          
+
+   
+             // === 核心：可爱的删除确认弹窗 (已修复：每次打开清空密码) ===
+        function deleteWithStyle(photoId) {
+            Swal.fire({
+                title: '',
+                width: 500,
+                padding: 0,
+                background: 'transparent',
+                showConfirmButton: false,
+                html: `
+                    <div class="envelope-card">
+                        <div class="envelope-heart">💌</div>
+                        <h2 class="envelope-title">验证身份</h2>
+                        <p class="envelope-text">只有yss才知道的秘密口令...<br>请输入密钥删除照片：</p>
+                        
+                        <!-- 修改点1：加了 autocomplete="new-password" 防止浏览器自动填充 -->
+                        <input type="password" id="secret-key" class="cute-input" placeholder="Password" 
+                               autocomplete="new-password" readonly onfocus="this.removeAttribute('readonly');">
+                               
+                        <div class="envelope-actions">
+                            <button onclick="checkKeyAndDel(${photoId})" class="btn-cute btn-confirm">确认删除</button>
+                            <button onclick="Swal.close()" class="btn-cute btn-cancel">取消</button>
+                        </div>
+                    </div>
+                `,
+                didOpen: () => {
+                    const input = document.getElementById('secret-key');
+                    if(input) {
+                        // 修改点2：强制清空输入框的值
+                        input.value = ''; 
+                        
+                        // 稍微延迟一下再聚焦，有时候浏览器会在聚焦瞬间填充
+                        setTimeout(() => {
+                            input.focus();
+                            // 再次清空，双重保险
+                            input.value = ''; 
+                        }, 100);
+
+                        input.addEventListener('keyup', (e) => {
+                            if (e.key === 'Enter') checkKeyAndDel(photoId);
+                        });
+                    }
+                }
+            });
+        }
+
+
+        // 验证删除逻辑
+        window.checkKeyAndDel = async function(id) {
+            const input = document.getElementById('secret-key');
+            if (input.value === 'ssyuan023') {
+                  input.value = '';  // 密码错误：立刻清空输入框
+                try {
+                    const { error } = await _supabase.from('photos').delete().eq('id', id);
+                    if (error) throw error;
+                    Swal.close();
+                    Swal.fire({ icon: 'success', title: '删除成功 ✨', toast: true, position: 'top', timer: 1500, showConfirmButton: false });
+                    loadPhotos();
+                } catch (err) {
+                    Swal.showValidationMessage('删除失败: ' + err.message);
+                }
+            } else {
+                Swal.showValidationMessage('密钥不对哦，请重新输入');
+            }
+        }
+
+        function escapeHtml(text) {
+            if(!text) return '';
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        loadPhotos();
+
+                // === 可爱的粒子特效函数 ===
+        function createCuteEffects(x, y) {
+            const emojis = ['💬', '✨', '🌸', '💖', '🐰', '📨']; // 改成了和评论相关的表情
+            const particleCount = 8; 
+
+            for (let i = 0; i < particleCount; i++) {
+                const el = document.createElement('div');
+                el.innerText = emojis[Math.floor(Math.random() * emojis.length)];
+                el.className = 'like-particle';
+                
+                // 随机位置偏移
+                const randomX = (Math.random() - 0.5) * 80; 
+                const randomRot = (Math.random() - 0.5) * 60; 
+                
+                el.style.left = `${x}px`;
+                el.style.top = `${y}px`;
+                el.style.setProperty('--tx', `${randomX}px`);
+                el.style.setProperty('--rot', `${randomRot}deg`);
+                
+                document.body.appendChild(el);
+
+                setTimeout(() => el.remove(), 1000);
+            }
+        }
+
+    </script>
+</body>
+</html>
