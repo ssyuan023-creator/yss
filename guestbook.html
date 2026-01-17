@@ -1,0 +1,908 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>留言板 | Say anything</title>
+
+  <!-- gallery.html 同款依赖 -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <!-- index.html 用到的 dark 主题（保持弹窗风格一致） -->
+  <link href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-dark@4/dark.css" rel="stylesheet">
+
+  <style>
+    :root{
+      /* gallery.html 配色 */
+      --color-bg:#FFFAF0;
+      --color-primary:#2C5282;
+      --color-pink:#E88BA5;
+      --color-text:#2D3748;
+
+      /* index.html 留言板用到的变量（保持风格一致） */
+      --color-soft-pink:#F5D4E0;
+      --color-soft-teal:#D4E8F5;
+      --color-cream:#FFFAF0;
+      --color-deep-blue:#2C5282;
+      --color-accent:#E88BA5;
+      --color-text-light:#6B5B4E;
+    }
+
+    body{
+      font-family:'Segoe UI','Microsoft YaHei',sans-serif;
+      background-color:var(--color-bg);
+      color:var(--color-text);
+      margin:0;
+      padding-bottom:60px;
+    }
+
+    /* 顶部导航：参考 gallery.html */
+    .top-bar{
+      background:rgba(255,255,255,0.95);
+      padding:0.8rem 2rem;
+      position:sticky;
+      top:0;
+      z-index:100;
+      backdrop-filter:blur(10px);
+      box-shadow:0 2px 10px rgba(0,0,0,0.05);
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+    }
+    .home-link{ text-decoration:none; color:var(--color-primary); font-weight:bold; }
+    .nav-right a{ text-decoration:none; color:var(--color-primary); font-weight:700; margin-left:16px; }
+    .nav-right a:hover{ color:var(--color-pink); }
+
+    /* 大横幅：Say anything */
+    .banner{
+      max-width:1100px;
+      margin:24px auto 0;
+      padding:28px 22px;
+      border-radius:18px;
+      background:linear-gradient(135deg, rgba(232,139,165,0.18), rgba(44,82,130,0.10));
+      box-shadow:0 10px 30px rgba(0,0,0,0.06);
+    }
+    .banner h1{
+      margin:0 0 8px 0;
+      font-size:2.4rem;
+      color:var(--color-primary);
+      letter-spacing:1px;
+    }
+    .banner p{
+      margin:0;
+      color:var(--color-text-light);
+      font-size:1.05rem;
+    }
+
+    /* 留言板：保留 index.html 风格（不做词云） */
+    .container{
+      max-width:1100px;
+      margin:18px auto 0;
+      padding:0 18px;
+    }
+
+    .section-title{
+      font-size:2rem;
+      color:var(--color-deep-blue);
+      margin:26px 0 18px;
+      text-align:left;
+      font-weight:700;
+    }
+
+    .message-section{
+      padding:30px;
+      background:rgba(255,255,255,0.92);
+      border-radius:20px;
+      box-shadow:0 10px 40px rgba(0,0,0,0.08);
+    }
+    .message-section h3{
+      color:var(--color-deep-blue);
+      font-size:1.6rem;
+      margin-bottom:10px;
+      font-weight:600;
+    }
+    .message-input{
+      width:100%;
+      padding:15px;
+      margin-bottom:12px;
+      border:2px solid var(--color-soft-teal);
+      border-radius:10px;
+      font-size:1rem;
+      font-family:inherit;
+      color:#3D2817;
+      background:rgba(255,255,255,0.95);
+      transition:all 0.3s ease;
+    }
+    .message-input:focus{
+      outline:none;
+      border-color:var(--color-accent);
+      box-shadow:0 0 20px rgba(232,139,165,0.25);
+      background:white;
+    }
+    textarea.message-input{ resize:vertical; min-height:110px; }
+
+    .message-btn{
+      width:100%;
+      padding:12px;
+      background:linear-gradient(135deg, var(--color-accent), #E88BA5);
+      color:white;
+      border:none;
+      border-radius:10px;
+      font-size:1rem;
+      font-weight:700;
+      cursor:pointer;
+      transition:all 0.3s ease;
+      box-shadow:0 5px 15px rgba(232,139,165,0.25);
+    }
+    .message-btn:hover{ transform:translateY(-2px); box-shadow:0 8px 25px rgba(232,139,165,0.35); }
+    .message-btn:active{ transform:translateY(0); }
+
+    /* 留言列表：沿用 index.html 的“Updated Message Board”风格 */
+    .messages-display{
+      margin-top:18px;
+      max-height:520px;
+      overflow-y:auto;
+      padding:15px;
+      background:rgba(212,232,245,0.3);
+      border-radius:10px;
+      scroll-behavior:smooth;
+    }
+
+    .message-item{
+      position:relative;
+      padding:12px 70px 12px 12px;
+      margin-bottom:10px;
+      background:white;
+      border-radius:8px;
+      border-left:4px solid var(--color-accent);
+      animation:messageSlide 0.3s ease;
+    }
+    @keyframes messageSlide{
+      from{ opacity:0; transform:translateY(8px); }
+      to{ opacity:1; transform:translateY(0); }
+    }
+
+    .message-item .name{ font-weight:700; color:var(--color-accent); font-size:0.95rem; }
+    .message-item .time{ font-size:0.82rem; color:var(--color-text-light); margin-left:10px; }
+    .message-item .content{ margin-top:6px; color:#3D2817; font-size:0.98rem; line-height:1.6; }
+
+    .message-delete{
+      position:absolute;
+      top:10px;
+      right:10px;
+      border:none;
+      background:rgba(232,139,165,0.12);
+      color:var(--color-accent);
+      padding:4px 10px;
+      border-radius:999px;
+      cursor:pointer;
+      font-size:0.8rem;
+      font-weight:800;
+    }
+    .message-delete:hover{ background:rgba(232,139,165,0.25); }
+
+    /* 点赞按钮 + 特效（沿用 index.html） */
+    .message-actions{
+      display:flex;
+      justify-content:flex-end;
+      gap:10px;
+      margin-top:10px;
+    }
+    .btn-like, .btn-reply{
+      background:transparent;
+      border:none;
+      cursor:pointer;
+      font-size:14px;
+      color:#888;
+      display:flex;
+      align-items:center;
+      gap:6px;
+      transition:all 0.2s ease;
+      padding:6px 10px;
+      border-radius:12px;
+    }
+    .btn-like:hover, .btn-reply:hover{
+      background-color:rgba(232,139,165,0.10);
+      color:#E88BA5;
+    }
+    .btn-like.liked{ color:#E88BA5; font-weight:800; }
+    .btn-like:active, .btn-reply:active{ transform:scale(0.92); }
+
+    .like-particle{
+      position:fixed;
+      pointer-events:none;
+      z-index:9999;
+      font-size:24px;
+      animation:floatUp 1s ease-out forwards;
+      user-select:none;
+    }
+    @keyframes floatUp{
+      0%{ transform:translate(0,0) scale(1) rotate(0deg); opacity:1; }
+      100%{ transform:translate(var(--tx), -100px) scale(1.5) rotate(var(--rot)); opacity:0; }
+    }
+
+    /* 回复区 */
+    .replies{
+      margin-top:12px;
+      padding-top:10px;
+      border-top:1px dashed rgba(44,82,130,0.18);
+    }
+    .reply-item{
+      position:relative;
+      margin-top:10px;
+      padding:10px 58px 10px 10px;
+      background:rgba(245, 250, 255, 0.9);
+      border-radius:10px;
+      border-left:3px solid rgba(44,82,130,0.25);
+    }
+    .reply-item .name{ color:var(--color-primary); font-weight:800; }
+    .reply-item .time{ color:var(--color-text-light); font-size:0.8rem; margin-left:10px; }
+    .reply-item .content{ margin-top:6px; color:#3D2817; }
+
+    .reply-delete{
+      position:absolute;
+      top:10px;
+      right:10px;
+      border:none;
+      background:rgba(44,82,130,0.10);
+      color:var(--color-primary);
+      padding:4px 10px;
+      border-radius:999px;
+      cursor:pointer;
+      font-size:0.75rem;
+      font-weight:800;
+    }
+    .reply-delete:hover{ background:rgba(44,82,130,0.18); }
+
+    .reply-form{
+      margin-top:12px;
+      padding:12px;
+      border-radius:12px;
+      background:rgba(255,255,255,0.75);
+      border:1px solid rgba(232,139,165,0.18);
+    }
+    .reply-form .row{
+      display:grid;
+      grid-template-columns: 1fr;
+      gap:10px;
+    }
+    .reply-form .reply-btn{
+      width:100%;
+      padding:10px;
+      border:none;
+      border-radius:10px;
+      cursor:pointer;
+      font-weight:800;
+      background:linear-gradient(135deg, rgba(44,82,130,0.92), rgba(232,139,165,0.92));
+      color:white;
+    }
+
+    /* 空白提示 */
+    .empty-state{
+      padding:18px;
+      border-radius:12px;
+      background:rgba(255,255,255,0.85);
+      color:var(--color-text-light);
+      text-align:center;
+      border:1px dashed rgba(232,139,165,0.35);
+    }
+
+    /* --- 可爱信封弹窗样式（沿用 index.html） --- */
+    .envelope-card{
+      background: var(--color-cream);
+      border-radius: 20px;
+      padding: 2rem;
+      border: 4px solid var(--color-soft-pink);
+      box-shadow: 0 10px 30px rgba(232, 139, 165, 0.2);
+      position: relative;
+      max-width: 420px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    .envelope-card::before{
+      content:'';
+      position:absolute;
+      top:-20px;
+      left:50%;
+      transform:translateX(-50%);
+      border-left:150px solid transparent;
+      border-right:150px solid transparent;
+      border-bottom:20px solid var(--color-soft-pink);
+      z-index:2;
+    }
+    .envelope-heart{
+      position:absolute;
+      top:-30px;
+      left:50%;
+      transform:translateX(-50%);
+      font-size:40px;
+      z-index:3;
+      animation:heartBeat 1.5s infinite;
+    }
+    @keyframes heartBeat{
+      0%,100%{ transform:translateX(-50%) scale(1); }
+      50%{ transform:translateX(-50%) scale(1.1); }
+    }
+    .envelope-title{
+      font-family:'Caveat', cursive;
+      color: var(--color-deep-blue);
+      font-size: 2rem;
+      margin-top: 10px;
+      margin-bottom: 10px;
+    }
+    .envelope-text{
+      color: #3D2817;
+      font-size: 1rem;
+      margin-bottom: 20px;
+      line-height:1.6;
+    }
+    .cute-input{
+      width: 80%;
+      padding: 12px 20px;
+      border: 2px dashed var(--color-soft-pink);
+      border-radius: 30px;
+      outline: none;
+      background: #fff;
+      color: var(--color-deep-blue);
+      font-size: 1.05rem;
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+    .cute-input:focus{
+      border-color: var(--color-accent);
+      box-shadow: 0 0 15px rgba(232, 139, 165, 0.3);
+    }
+    .envelope-actions{
+      margin-top: 25px;
+      display:flex;
+      justify-content:center;
+      gap:15px;
+    }
+    .btn-cute{
+      padding: 8px 25px;
+      border-radius: 50px;
+      border:none;
+      cursor:pointer;
+      font-family:'Caveat', cursive;
+      font-size: 1.3rem;
+      transition: transform 0.2s;
+    }
+    .btn-confirm{ background: var(--color-accent); color:white; box-shadow: 0 4px 10px rgba(232, 139, 165, 0.4); }
+    .btn-cancel{ background:#f0f0f0; color:#888; }
+    .btn-cute:hover{ transform:scale(1.05); }
+
+    @media (max-width: 768px){
+      .top-bar{ padding:0.8rem 1rem; }
+      .banner{ margin:18px 12px 0; }
+      .container{ padding:0 12px; }
+      .message-section{ padding:18px; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="top-bar">
+    <a class="home-link" href="index.html">← 返回首页</a>
+    <div class="nav-right">
+      <a href="gallery.html">照片墙</a>
+      <a href="guestbook.html" style="color:var(--color-pink);">留言板</a>
+      <a href="index.html#contact">联系我</a>
+    </div>
+  </div>
+
+  <div class="banner">
+    <h1>Say anything</h1>
+    <p>每一条留言都是一段新的故事。也欢迎在留言下回复对话。</p>
+  </div>
+
+  <div class="container">
+    <div class="section-title">留言板</div>
+
+    <div class="message-section">
+      <h3>留下你的足迹</h3>
+      <p style="color: var(--color-text-light); margin-bottom: 16px;">
+        写下你想说的任何话（也可以 Ctrl + Enter 发送）。
+      </p>
+
+      <input type="text" class="message-input" id="nameInput" placeholder="Your Name">
+      <textarea class="message-input" id="messageInput" placeholder="Your Message..."></textarea>
+      <button class="message-btn" id="sendBtn">发送留言</button>
+
+      <div class="messages-display" id="messagesDisplay">
+        <!-- JS 渲染 -->
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ====== Supabase（沿用 index.html 的项目）======
+    const SUPABASE_URL = 'https://ewlqcfsnmdhvjbgpqbyp.supabase.co';
+    const SUPABASE_KEY = 'sb_publishable_9p1JpA_jA5zUkZNBDzpTYQ_BCSSoyQQ';
+    const { createClient } = supabase;
+    const _supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    // 你 index.html 里用于删除校验的密码（保持一致）
+    const DELETE_PASSWORD = 'ssyuan023';
+
+    // ====== 使用新表名（如你不想新表，可改回 messages / 新增 replies）======
+    const TABLE_MESSAGES = 'messages';
+    const TABLE_REPLIES  = 'guestbook_replies';
+
+    let messages = [];
+    let repliesByMessage = new Map();
+
+    document.getElementById('sendBtn').addEventListener('click', submitMessage);
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' && e.ctrlKey) submitMessage();
+    });
+
+    document.addEventListener('DOMContentLoaded', () => {
+      fetchAll();
+    });
+
+    async function fetchAll(){
+      await fetchMessages();
+      await fetchRepliesForCurrentMessages();
+      renderAll();
+    }
+
+    // ====== 拉取留言 ======
+    async function fetchMessages(){
+      const { data, error } = await _supabase
+        .from(TABLE_MESSAGES)
+        .select('*')
+        .order('created_at', { ascending: false })
+        .limit(200);
+
+      if (error) { console.error('加载留言失败:', error); return; }
+      messages = (data || []).map(x => ({
+        id: x.id,
+        name: x.name,
+        content: x.content,
+        time: x.time_str || formatDate(new Date(x.created_at)),
+        likes: x.likes || 0,
+        created_at: x.created_at
+      }));
+    }
+
+    // ====== 拉取回复（按 message_id 分组）======
+    async function fetchRepliesForCurrentMessages(){
+      repliesByMessage = new Map();
+      const ids = messages.map(m => m.id);
+      if (ids.length === 0) return;
+
+      const { data, error } = await _supabase
+        .from(TABLE_REPLIES)
+        .select('*')
+        .in('message_id', ids)
+        .order('created_at', { ascending: true });
+
+      if (error) { console.error('加载回复失败:', error); return; }
+
+      (data || []).forEach(r => {
+        const arr = repliesByMessage.get(r.message_id) || [];
+        arr.push({
+          id: r.id,
+          message_id: r.message_id,
+          name: r.name,
+          content: r.content,
+          time: formatDate(new Date(r.created_at)),
+          created_at: r.created_at
+        });
+        repliesByMessage.set(r.message_id, arr);
+      });
+    }
+
+    function renderAll(){
+      const display = document.getElementById('messagesDisplay');
+      display.innerHTML = '';
+
+      if (!messages.length){
+        display.innerHTML = `<div class="empty-state">还没有留言，来写第一条吧。</div>`;
+        return;
+      }
+
+      messages.forEach(msg => {
+        const wrap = document.createElement('div');
+        wrap.className = 'message-item';
+
+        wrap.innerHTML = `
+          <span class="name">${escapeHtml(msg.name)}</span>
+          <span class="time">${escapeHtml(msg.time)}</span>
+          <button class="message-delete" type="button" aria-label="Delete">×</button>
+          <div class="content">${escapeHtml(msg.content)}</div>
+
+          <div class="message-actions">
+            <button class="btn-reply" type="button">💬 回复</button>
+            <button class="btn-like" type="button">
+              🩷 <span class="like-count">${msg.likes}</span>
+            </button>
+          </div>
+
+          <div class="replies" style="display:block;">
+            ${renderRepliesHtml(msg.id)}
+            ${renderReplyFormHtml(msg.id)}
+          </div>
+        `;
+
+        // 删除留言
+        wrap.querySelector('.message-delete').addEventListener('click', () => {
+          confirmDeleteMessage(msg.id);
+        });
+
+        // 点赞
+        const likeBtn = wrap.querySelector('.btn-like');
+        likeBtn.addEventListener('click', (e) => {
+          handleLike(msg.id, likeBtn, e);
+        });
+
+        // 展开/收起回复表单
+        const replyBtn = wrap.querySelector('.btn-reply');
+        replyBtn.addEventListener('click', () => {
+          const form = wrap.querySelector(`#reply-form-${msg.id}`);
+          form.style.display = (form.style.display === 'none' ? 'block' : 'none');
+        });
+
+        // 发送回复
+        const replySendBtn = wrap.querySelector(`#reply-send-${msg.id}`);
+        replySendBtn.addEventListener('click', async () => {
+          const nameEl = wrap.querySelector(`#reply-name-${msg.id}`);
+          const contentEl = wrap.querySelector(`#reply-content-${msg.id}`);
+          await submitReply(msg.id, nameEl.value, contentEl.value);
+        });
+
+        // 删除回复（统一密码弹窗）
+        wrap.querySelectorAll('[data-reply-id]').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const rid = btn.getAttribute('data-reply-id');
+            confirmDeleteReply(rid);
+          });
+        });
+
+        // 默认隐藏回复表单
+        wrap.querySelector(`#reply-form-${msg.id}`).style.display = 'none';
+
+        display.appendChild(wrap);
+      });
+    }
+
+    function renderRepliesHtml(messageId){
+      const replies = repliesByMessage.get(messageId) || [];
+      if (!replies.length) return '';
+
+      return replies.map(r => `
+        <div class="reply-item">
+          <span class="name">${escapeHtml(r.name)}</span>
+          <span class="time">${escapeHtml(r.time)}</span>
+          <button class="reply-delete" type="button" data-reply-id="${r.id}">×</button>
+          <div class="content">${escapeHtml(r.content)}</div>
+        </div>
+      `).join('');
+    }
+
+    function renderReplyFormHtml(messageId){
+      return `
+        <div class="reply-form" id="reply-form-${messageId}">
+          <div class="row">
+            <input class="message-input" id="reply-name-${messageId}" placeholder="回复昵称 (Your Name)">
+            <textarea class="message-input" id="reply-content-${messageId}" placeholder="写下你的回复..."></textarea>
+            <button class="reply-btn" id="reply-send-${messageId}">发送回复</button>
+          </div>
+        </div>
+      `;
+    }
+
+    // ====== 发送留言（沿用 index.html 的空白提示风格）======
+    async function submitMessage(){
+      const nameInput = document.getElementById('nameInput');
+      const msgInput  = document.getElementById('messageInput');
+
+      const name = (nameInput.value || '').trim();
+      const content = (msgInput.value || '').trim();
+
+      if (!name || !content){
+        Swal.fire({
+          title: '',
+          width: 620,
+          padding: 0,
+          background: 'transparent',
+          showConfirmButton: false,
+          html: `
+            <div class="envelope-card">
+              <div class="envelope-heart" style="animation:none; font-size:48px;">📝</div>
+              <h2 class="envelope-title">还有空空的地方哦</h2>
+              <p class="envelope-text">请写下你的名字和留言内容<br>让大家认识一下你吧~</p>
+              <div class="envelope-actions">
+                <button onclick="Swal.close()" class="btn-cute btn-confirm">好哒，我去填</button>
+              </div>
+            </div>
+          `
+        });
+        return;
+      }
+
+      const now = new Date();
+      const timeStr = formatDate(now);
+
+      try{
+        const { error } = await _supabase
+          .from(TABLE_MESSAGES)
+          .insert([{ name, content, time_str: timeStr, likes: 0 }]);
+
+        if (error) throw error;
+
+        nameInput.value = '';
+        msgInput.value = '';
+
+        await fetchAll();
+
+        Swal.fire({
+          icon: 'success',
+          title: '留言已飞向云端 ☁️',
+          toast: true,
+          position: 'top-end',
+          showConfirmButton: false,
+          timer: 2000,
+          background: '#FFFAF0',
+          color: '#2C5282'
+        });
+      }catch(err){
+        console.error('发送失败:', err);
+        Swal.fire({
+          icon: 'warning',
+          title: '哎呀，发送受阻',
+          text: '留言未能发出，请稍后再试',
+          confirmButtonText: '我知道啦',
+          confirmButtonColor: '#2C5282',
+          background: '#FFFAF0',
+          color: '#2C5282'
+        });
+      }
+    }
+
+    // ====== 发送回复（也要姓名）======
+    async function submitReply(messageId, name, content){
+      const n = (name || '').trim();
+      const c = (content || '').trim();
+
+      if (!n || !c){
+        Swal.fire({
+          title: '',
+          width: 620,
+          padding: 0,
+          background: 'transparent',
+          showConfirmButton: false,
+          html: `
+            <div class="envelope-card">
+              <div class="envelope-heart" style="animation:none; font-size:48px;">💬</div>
+              <h2 class="envelope-title">回复还没写完整</h2>
+              <p class="envelope-text">请填写回复昵称和回复内容哦~</p>
+              <div class="envelope-actions">
+                <button onclick="Swal.close()" class="btn-cute btn-confirm">好哒</button>
+              </div>
+            </div>
+          `
+        });
+        return;
+      }
+
+      try{
+        const { error } = await _supabase
+          .from(TABLE_REPLIES)
+          .insert([{ message_id: messageId, name: n, content: c }]);
+
+        if (error) throw error;
+
+        await fetchAll();
+
+        Swal.fire({
+          icon: 'success',
+          title: '回复发送成功 ✨',
+          toast: true,
+          position: 'top-end',
+          showConfirmButton: false,
+          timer: 1600,
+          background: '#FFFAF0',
+          color: '#2C5282'
+        });
+      }catch(err){
+        console.error('回复失败:', err);
+        Swal.fire({
+          icon: 'warning',
+          title: '回复发送失败',
+          text: '请稍后再试',
+          confirmButtonColor: '#2C5282',
+          background: '#FFFAF0',
+          color: '#2C5282'
+        });
+      }
+    }
+
+    // ====== 删除留言（保留 index.html 的信封弹窗样式）======
+    function confirmDeleteMessage(id){
+      Swal.fire({
+        title: '',
+        width: 620,
+        padding: 0,
+        background: 'transparent',
+        showConfirmButton: false,
+        html: `
+          <div class="envelope-card">
+            <div class="envelope-heart">💌</div>
+            <h2 class="envelope-title">验证邀请函</h2>
+            <p class="envelope-text">想要删除这条回忆吗？<br>输入密码：</p>
+            <input type="password" id="cute-password" class="cute-input" placeholder="Password" autofocus>
+            <div class="envelope-actions">
+              <button onclick="window.__checkDeleteMessage('${id}')" class="btn-cute btn-confirm">确认删除</button>
+              <button onclick="Swal.close()" class="btn-cute btn-cancel">取消</button>
+            </div>
+          </div>
+        `,
+        didOpen: () => {
+          const input = document.getElementById('cute-password');
+          if (input){
+            input.focus();
+            input.addEventListener('keyup', (e) => {
+              if (e.key === 'Enter') window.__checkDeleteMessage(id);
+            });
+          }
+        }
+      });
+    }
+
+    window.__checkDeleteMessage = async function(id){
+      const input = document.getElementById('cute-password');
+      const password = (input?.value || '');
+
+      if (password !== DELETE_PASSWORD){
+        Swal.showValidationMessage(' 哎呀，密钥不对呢');
+        return;
+      }
+
+      try{
+        const { error } = await _supabase.from(TABLE_MESSAGES).delete().eq('id', id);
+        if (error) throw error;
+
+        Swal.close();
+        await fetchAll();
+
+        Swal.fire({
+          icon: 'success',
+          title: '删除成功 ✨',
+          toast: true,
+          position: 'top-end',
+          showConfirmButton: false,
+          timer: 2000,
+          background: '#FFFAF0',
+          color: '#2C5282'
+        });
+      }catch(err){
+        console.error(err);
+        Swal.showValidationMessage('删除失败');
+      }
+    }
+
+    // ====== 删除回复（同样的弹窗体验）======
+    function confirmDeleteReply(replyId){
+      Swal.fire({
+        title: '',
+        width: 620,
+        padding: 0,
+        background: 'transparent',
+        showConfirmButton: false,
+        html: `
+          <div class="envelope-card">
+            <div class="envelope-heart">🧷</div>
+            <h2 class="envelope-title">删除回复</h2>
+            <p class="envelope-text">确定要删除这条回复吗？<br>输入密码：</p>
+            <input type="password" id="cute-password-reply" class="cute-input" placeholder="Password" autofocus>
+            <div class="envelope-actions">
+              <button onclick="window.__checkDeleteReply('${replyId}')" class="btn-cute btn-confirm">确认删除</button>
+              <button onclick="Swal.close()" class="btn-cute btn-cancel">取消</button>
+            </div>
+          </div>
+        `,
+        didOpen: () => {
+          const input = document.getElementById('cute-password-reply');
+          if (input){
+            input.focus();
+            input.addEventListener('keyup', (e) => {
+              if (e.key === 'Enter') window.__checkDeleteReply(replyId);
+            });
+          }
+        }
+      });
+    }
+
+    window.__checkDeleteReply = async function(replyId){
+      const input = document.getElementById('cute-password-reply');
+      const password = (input?.value || '');
+
+      if (password !== DELETE_PASSWORD){
+        Swal.showValidationMessage(' 哎呀，密钥不对呢');
+        return;
+      }
+
+      try{
+        const { error } = await _supabase.from(TABLE_REPLIES).delete().eq('id', replyId);
+        if (error) throw error;
+
+        Swal.close();
+        await fetchAll();
+
+        Swal.fire({
+          icon: 'success',
+          title: '回复已删除 ✨',
+          toast: true,
+          position: 'top-end',
+          showConfirmButton: false,
+          timer: 1800,
+          background: '#FFFAF0',
+          color: '#2C5282'
+        });
+      }catch(err){
+        console.error(err);
+        Swal.showValidationMessage('删除失败');
+      }
+    }
+
+    // ====== 点赞（沿用 index.html 的飘心特效）======
+    async function handleLike(id, btn, event){
+      createCuteEffects(event.clientX, event.clientY);
+
+      const countSpan = btn.querySelector('.like-count');
+      let currentCount = parseInt(countSpan.textContent) || 0;
+      currentCount++;
+      countSpan.textContent = currentCount;
+      btn.classList.add('liked');
+
+      try{
+        const { error } = await _supabase
+          .from(TABLE_MESSAGES)
+          .update({ likes: currentCount })
+          .eq('id', id);
+        if (error) throw error;
+      }catch(err){
+        console.error('点赞同步失败:', err);
+      }
+    }
+
+    function createCuteEffects(x, y){
+      const emojis = ['❤️','💖','🌸','✨','🥰','🐰','🍓','🍬'];
+      const particleCount = 5;
+
+      for (let i=0;i<particleCount;i++){
+        const el = document.createElement('div');
+        el.innerText = emojis[Math.floor(Math.random() * emojis.length)];
+        el.className = 'like-particle';
+
+        const randomX = (Math.random() - 0.5) * 50;
+        const randomRot = (Math.random() - 0.5) * 60;
+
+        el.style.left = `${x}px`;
+        el.style.top = `${y}px`;
+        el.style.setProperty('--tx', `${randomX}px`);
+        el.style.setProperty('--rot', `${randomRot}deg`);
+
+        document.body.appendChild(el);
+        setTimeout(() => el.remove(), 1000);
+      }
+    }
+
+    function escapeHtml(text){
+      const div = document.createElement('div');
+      div.textContent = String(text ?? '');
+      return div.innerHTML;
+    }
+
+    function formatDate(d){
+      const yyyy = d.getFullYear();
+      const mm = String(d.getMonth()+1).padStart(2,'0');
+      const dd = String(d.getDate()).padStart(2,'0');
+      return `${yyyy}.${mm}.${dd}`;
+    }
+  </script>
+</body>
+</html>
