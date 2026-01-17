@@ -976,6 +976,180 @@
         opacity: 0;
     }
 }
+        /* =========================================
+           📱 移动端适配专用代码 (Mobile Responsive)
+           说明：仅在屏幕宽度小于 768px 时生效
+           ========================================= */
+        @media screen and (max-width: 768px) {
+            
+            /* 1. 全局容器调整 */
+            .container {
+                width: 100%;
+                padding: 0 20px;
+            }
+            
+            .section-title {
+                font-size: 2rem; /* 标题字号调小 */
+                margin-bottom: 40px;
+            }
+
+            /* 2. Hero 区域 (首页) */
+            .hero-title {
+                font-size: 2.2rem; /* 避免标题太长换行 */
+            }
+            .hero-subtitle {
+                font-size: 1.1rem;
+            }
+
+            /* 3. About 分屏区域 -> 改为上下布局 */
+            .split-container {
+                flex-direction: column; /* 关键：从左右变上下 */
+                height: auto; /* 高度自适应 */
+            }
+
+            .about-image-side {
+                flex: none;
+                width: 100%;
+                height: 50vh; /* 图片占一半屏高 */
+                min-height: 400px;
+            }
+
+            .about-text-side {
+                flex: none;
+                width: 100%;
+                padding: 40px 20px;
+                background: linear-gradient(135deg, #f5f1e8 0%, #e8dfd0 100%);
+            }
+
+            .dialogue-box {
+                margin: -60px auto 0; /* 对话框稍微往上叠一点，更有设计感 */
+                max-width: 100%;
+                padding: 25px;
+            }
+
+            /* 4. Timeline 时间轴 -> 改为全左对齐 */
+            .timeline::before {
+                left: 20px; /* 线移到最左边 */
+            }
+
+            .timeline-item {
+                width: 100%; /* 占满宽度 */
+                padding-left: 50px;
+                padding-right: 0;
+                margin-bottom: 30px;
+            }
+
+            /* 强制所有条目内容靠左 */
+            .timeline-item:nth-child(odd),
+            .timeline-item:nth-child(even) {
+                left: 0;
+                text-align: left;
+                padding-left: 50px; /* 给线留出空间 */
+            }
+
+            /* 修正圆点位置 */
+            .timeline-item:nth-child(odd) .timeline-dot,
+            .timeline-item:nth-child(even) .timeline-dot {
+                left: 12px; /* 对齐线 */
+                right: auto;
+            }
+
+            /* 5. 3D 互动区 -> 改为单列 */
+            .interactive-container {
+                grid-template-columns: 1fr; /* 单列显示 */
+                gap: 30px;
+            }
+            
+            /* 城堡/词云区域高度调整 */
+            .castle-3d {
+                height: 350px;
+            }
+
+            /* 6. 联系方式 -> 允许换行 */
+            .contact-info {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            /* 7. 导航栏调整 */
+            .scroll-indicator {
+                bottom: 20px; 
+                right: 20px;
+                transform: scale(0.8); /* 缩小一点 */
+            }
+        }
+              /* =========================================
+           📱 移动端背景定制：莫奈印象派风格
+           图片源：IMG_0052.jpg
+           ========================================= */
+        @media screen and (max-width: 768px) {
+            
+            /* 1. 清除 body 全局背景，改为兜底色 */
+            body {
+                background-image: none !important;
+                background-color: #dbeafe; /* 取图片里的淡蓝色作为底色 */
+            }
+
+            /* 2. 让每一个主要板块都独立使用这张美图 */
+            .hero, 
+            .about, 
+            .experience, 
+            .interactive, 
+            .contact {
+                /* 设置背景图 */
+                background-image: url('IMG_0052.jpg') !important;
+                
+                /* 关键：让图片完整覆盖当前板块 */
+                background-size: cover;          /* 填满，可能会裁掉边缘 */
+                background-position: center;     /* 居中对齐，展示最美的落日部分 */
+                background-repeat: no-repeat;
+                
+                /* 稍微加一点内边距，给内容留呼吸感 */
+                padding-top: 60px; 
+                padding-bottom: 60px;
+                
+                /* 给每个板块底部加个分割线，防止视觉混淆 */
+                border-bottom: 2px solid rgba(255,255,255,0.4);
+            }
+
+            /* 3. 特殊处理 Hero (首屏) */
+            .hero {
+                /* 强制占满整个手机屏幕高度，不留白 */
+                height: 100vh !important; 
+                min-height: 600px;
+                
+                /* 去掉之前的遮罩，让画作原色透出来 */
+                background-color: transparent !important; 
+            }
+            .hero::before {
+                /* 如果觉得字看不清，可以给 Hero 单独加一点淡淡的暗色遮罩 */
+                background: rgba(0,0,0,0.15) !important; 
+            }
+
+            /* 4. 给后续板块的内容加“磨砂玻璃”白底，保证文字清晰可读 */
+            .experience .container,
+            .interactive .container,
+            .contact .contact-content,
+            .dialogue-box {
+                background: rgba(255, 255, 255, 0.75) !important; /* 75%不透明白底 */
+                backdrop-filter: blur(8px); /* 磨砂效果 */
+                border-radius: 20px;
+                padding: 25px;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            }
+
+            /* 5. 修正 About 分屏背景 */
+            .about-image-side, 
+            .about-text-side {
+                background: transparent !important; /* 去掉原本的渐变色 */
+                padding: 0 !important; /* 去掉内边距，让背景图透出来 */
+            }
+            .split-container {
+                padding: 40px 20px; /* 给整个容器加边距 */
+            }
+        }
+
+
 
 
     </style>
@@ -987,6 +1161,7 @@
 
 </head>
 <body>
+
 
     <!-- HERO SECTION -->
     <section class="hero">
@@ -1110,6 +1285,13 @@
             </div>
         </div>
     </section>
+
+    <nav style="position: absolute; top: 20px; right: 20px; z-index: 1000;">
+    <!-- 这是一个简单的悬浮导航链接示例 -->
+    <a href="index.html" style="margin-right: 15px; text-decoration: none; color: #2C5282; font-weight: bold;">首页</a>
+    <a href="gallery.html" style="margin-right: 15px; text-decoration: none; color: #2C5282; font-weight: bold;">照片墙</a>
+    <a href="#contact" style="text-decoration: none; color: #2C5282; font-weight: bold;">联系我</a>
+</nav>
 
     <!-- CONTACT SECTION -->
     <section class="contact" id="contact">
@@ -1519,10 +1701,26 @@
                     color: '#2C5282'
                 });
                 
-            } catch (error) {
-                console.error('发送失败:', error);
-                alert("发送失败，请检查网络");
-            }
+           } catch (error) {
+    console.error('发送失败:', error);
+
+    Swal.fire({
+        icon: 'warning', // 使用警告图标比错误图标更柔和
+        title: '哎呀，发送受阻',
+        text: '留言未能发出，请切换成流量',
+        showCancelButton: true,
+        confirmButtonText: '我要重试',
+        cancelButtonText: '稍后再说',
+        confirmButtonColor: '#2C5282', // 使用你原本的主题色
+        cancelButtonColor: '#A0AEC0',
+        reverseButtons: true
+    }).then((result) => {
+        if (result.isConfirmed) {
+            sendMessage(); // 用户点击重试后，重新调用发送函数
+        }
+    });
+}
+
         }
 
         // 删除功能
