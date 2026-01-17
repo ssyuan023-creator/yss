@@ -1078,6 +1078,68 @@
                 transform: scale(0.8); /* 缩小一点 */
             }
         }
+    /* ===========================
+   📱 Mobile: 每个 Section 单独一屏背景
+   =========================== */
+@media screen and (max-width: 768px) {
+  /* 1) 手机端禁用整页一张大背景（否则会出现“拉伸一张图”） */
+  body {
+    background-image: none !important;
+    background-attachment: scroll !important;
+  }
+
+  /* 2) 让每个 section 自己带背景图：每屏一张 */
+  section.hero,
+  section.about,
+  section.experience,
+  section.interactive,
+  section.contact {
+    background-image: url('IMG_0052.jpg') !important; /* 你的新背景图 */ 
+    background-repeat: no-repeat;
+    background-size: cover;         /* 填满当前 section */
+    background-position: center;    /* 居中裁切 */
+    background-attachment: scroll;  /* 手机端不要 fixed，避免卡顿/异常 */
+    min-height: 100vh;              /* 至少占满一屏：每页都“完整展示一遍” */
+  }
+
+  /* 3) Hero 强制一屏（第一屏就是完整背景） */
+  section.hero {
+    height: 100vh;
+  }
+
+  /* 4) 可选：为了文字清晰，给每个 section 加一层淡淡遮罩 */
+  section.hero::before,
+  section.about::before,
+  section.experience::before,
+  section.interactive::before,
+  section.contact::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(255, 250, 240, 0.35); /* 米色薄雾，更温柔 */
+    pointer-events: none;
+  }
+
+  /* 5) 关键：section 需要能承载伪元素遮罩 */
+  section.hero,
+  section.about,
+  section.experience,
+  section.interactive,
+  section.contact {
+    position: relative;
+    overflow: hidden; /* 防止遮罩溢出 */
+  }
+
+  /* 6) 让内容层浮到遮罩之上（避免被遮罩盖住点击） */
+  section.hero > *,
+  section.about > *,
+  section.experience > *,
+  section.interactive > *,
+  section.contact > * {
+    position: relative;
+    z-index: 2;
+  }
+}
 
     </style>
     <!-- SweetAlert2 Dark Theme -->
