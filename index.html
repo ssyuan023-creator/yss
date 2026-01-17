@@ -988,6 +988,7 @@
 </head>
 <body>
 
+
     <!-- HERO SECTION -->
     <section class="hero">
         <canvas class="hero-canvas" id="heroCanvas"></canvas>
@@ -1110,6 +1111,13 @@
             </div>
         </div>
     </section>
+
+    <nav style="position: absolute; top: 20px; right: 20px; z-index: 1000;">
+    <!-- 这是一个简单的悬浮导航链接示例 -->
+    <a href="index.html" style="margin-right: 15px; text-decoration: none; color: #2C5282; font-weight: bold;">首页</a>
+    <a href="gallery.html" style="margin-right: 15px; text-decoration: none; color: #2C5282; font-weight: bold;">照片墙</a>
+    <a href="#contact" style="text-decoration: none; color: #2C5282; font-weight: bold;">联系我</a>
+</nav>
 
     <!-- CONTACT SECTION -->
     <section class="contact" id="contact">
@@ -1410,26 +1418,9 @@
 
                 displayMessages();
                 renderWordCloud();
-         } catch (error) {
-    console.error('发送失败:', error);
-
-    Swal.fire({
-        icon: 'warning', // 使用警告图标比错误图标更柔和
-        title: '哎呀，发送受阻',
-        text: '留言未能发出，切换成流量试试哦',
-        showCancelButton: true,
-        confirmButtonText: '重试',
-        cancelButtonText: '稍后再说',
-        confirmButtonColor: '#2C5282', // 使用你原本的主题色
-        cancelButtonColor: '#A0AEC0',
-        reverseButtons: true
-    }).then((result) => {
-        if (result.isConfirmed) {
-            sendMessage(); // 用户点击重试后，重新调用发送函数
-        }
-    });
-}
-
+            } catch (error) {
+                console.error('加载留言失败:', error);
+            }
         }
 
 
@@ -1536,10 +1527,26 @@
                     color: '#2C5282'
                 });
                 
-            } catch (error) {
-                console.error('发送失败:', error);
-                alert("发送失败，请检查网络");
-            }
+           } catch (error) {
+    console.error('发送失败:', error);
+
+    Swal.fire({
+        icon: 'warning', // 使用警告图标比错误图标更柔和
+        title: '哎呀，发送受阻',
+        text: '留言未能发出，请切换成流量',
+        showCancelButton: true,
+        confirmButtonText: '我要重试',
+        cancelButtonText: '稍后再说',
+        confirmButtonColor: '#2C5282', // 使用你原本的主题色
+        cancelButtonColor: '#A0AEC0',
+        reverseButtons: true
+    }).then((result) => {
+        if (result.isConfirmed) {
+            sendMessage(); // 用户点击重试后，重新调用发送函数
+        }
+    });
+}
+
         }
 
         // 删除功能
