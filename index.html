@@ -1078,51 +1078,92 @@
                 transform: scale(0.8); /* 缩小一点 */
             }
         }
-  /* ===========================
-   📱 Mobile: 每个 Section 单独一屏背景
-   =========================== */
+
+/* =========================================
+   📱 移动端完美适配 + 统一大背景
+   ========================================= */
 @media screen and (max-width: 768px) {
-  body {
-    background-image: none !important;
-  }
+    
+    /* 1. 全站统一大背景 (一张图铺满，不跟随滚动) */
+    body::before {
+        content: "";
+        position: fixed; /* 关键：固定在屏幕背后 */
+        top: 0; left: 0; width: 100%; height: 100%;
+        background-image: url('IMG_0053.jpg') !important;
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        z-index: -999; /* 放在最底层 */
+    }
 
-  /* 让每个板块都显示这张新图 */
-  section.hero,
-  section.about,
-  section.experience,
-  section.interactive,
-  section.contact {
-    background-image: url('IMG_0056.jpg') !important; /* <--- 换成了新图 */
-    background-repeat: no-repeat;
-    background-size: cover;         
-    background-position: center;    
-    background-attachment: scroll;  
-    min-height: 100vh;              
-  }
+    /* 2. 清除所有 Section 自带的背景，让大背景透出来 */
+    body, .hero, .about, .experience, .interactive, .contact {
+        background: transparent !important;
+        background-image: none !important;
+    }
 
-  /* 保持文字清晰的遮罩（可选） */
-  section.hero::before,
-  section.about::before,
-  section.experience::before,
-  section.interactive::before,
-  section.contact::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: rgba(255, 255, 255, 0.2); /* 稍微调淡一点，因为原图比较白 */
-    pointer-events: none;
-  }
-  
-  /* 确保内容层级 */
-  section.hero, section.about, section.experience, section.interactive, section.contact {
-    position: relative;
-    overflow: hidden;
-  }
-  section.hero > *, section.about > *, section.experience > *, section.interactive > *, section.contact > * {
-    position: relative;
-    z-index: 2;
-  }
+    /* 3. Hero 首页修复 (防乱版核心) */
+    .hero {
+        height: 100vh;           /* 占满一屏 */
+        min-height: 600px;       /* 最小高度，防止内容重叠 */
+        display: flex;
+        flex-direction: column;  /* 强制垂直排列 */
+        justify-content: center; /* 垂直居中 */
+        align-items: center;
+        padding: 0 20px;         /* 左右留白 */
+        text-align: center;
+    }
+
+    .hero-content {
+        margin-top: -50px; /* 稍微往上提一点，视觉平衡 */
+        width: 100%;
+    }
+
+    .hero-title {
+        font-size: 2.2rem !important; /* 缩小标题 */
+        line-height: 1.2;
+        margin-bottom: 15px;
+        white-space: normal; /* 允许换行 */
+    }
+
+    .hero-subtitle {
+        font-size: 1.1rem !important;
+        margin-bottom: 30px;
+    }
+
+    /* 4. 其他板块优化 (防止文字看不清) */
+    /* 给文字内容加一层淡淡的白底磨砂，不然背景图太花看不清字 */
+    .about-text-side, 
+    .timeline-content, 
+    .message-section, 
+    .contact-info {
+        background: rgba(255, 255, 255, 0.75) !important; /* 半透明白底 */
+        backdrop-filter: blur(5px);
+        border-radius: 15px;
+        padding: 25px !important;
+        margin: 20px 0;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    }
+
+    /* 5. 布局强制单列 */
+    .split-container, 
+    .interactive-container, 
+    .contact-info {
+        flex-direction: column !important;
+        grid-template-columns: 1fr !important;
+        display: flex !important;
+    }
+    
+    .about-image-side {
+        height: 300px; /* 限制图片区高度 */
+        width: 100%;
+    }
+    
+    .timeline::before { left: 10px; } /* 时间轴线靠左 */
+    .timeline-item { width: 100%; padding-left: 35px; text-align: left; }
+    .timeline-dot { left: 4px; }
 }
+
 
     </style>
     <!-- SweetAlert2 Dark Theme -->
@@ -1882,13 +1923,38 @@
         }
 
         // ========== INITIALIZATION ==========
-        document.addEventListener('DOMContentLoaded', () => {
-            initParticles();
-            initHeroCanvas();
-            updateDialogue(0);
-            fetchMessages();
-            renderWordCloud();
-        });
+       document.addEventListener('DOMContentLoaded', () => {
+    initParticles();
+    initHeroCanvas();
+    updateDialogue(0);
+    fetchMessages();
+    renderWordCloud();
+    
+    // ✅ 新增：手机端专属提示
+    if (window.innerWidth <= 768) {
+        // 稍微延迟一点弹出，体验更好
+        setTimeout(() => {
+            Swal.fire({
+                title: '温馨提示 ✨',
+                text: '电脑端看效果更好哦~',
+                icon: 'info', // 或者用 'question'
+                width: 300,
+                padding: '1em',
+                background: '#fff',
+                backdrop: `
+                    rgba(0,0,123,0.1)
+                `,
+                confirmButtonText: '知道啦',
+                confirmButtonColor: '#E88BA5', // 配合你的粉色主题
+                customClass: {
+                    title: 'cute-title',
+                    popup: 'cute-popup'
+                }
+            });
+        }, 1000); // 1秒后弹出
+    }
+});
+
 
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Enter' && e.ctrlKey) {
