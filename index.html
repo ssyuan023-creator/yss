@@ -596,7 +596,9 @@
         }
 
         @keyframes bounce {
-            0%, 100% { transform: translateY(0); }\n            50% { transform: translateY(-10px); }\n        }
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
 
         /* RESPONSIVE */
         @media (max-width: 768px) {
@@ -655,7 +657,8 @@
         <div class="hero-content">
             <h1 class="hero-title">袁珊珊</h1>
             <p class="hero-subtitle">AI Product Creator | 梦想设计师</p>
-            <button class="hero-cta" onclick="smoothScroll('about')">探索我的世界</button>
+           <button class="hero-cta" onclick="smoothScroll('experience')">探索我的世界</button>
+
         </div>
     </section>
 
@@ -744,6 +747,13 @@
         </div>
     </section>
 
+    <script>
+        function smoothScroll(targetId) {
+            const element = document.getElementById(targetId);
+            if (element) {
+                element.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
     </script>
 </body>
 </html>
