@@ -1078,7 +1078,52 @@
                 transform: scale(0.8); /* 缩小一点 */
             }
         }
+  /* ===========================
+   📱 Mobile: 每个 Section 单独一屏背景
+   =========================== */
+@media screen and (max-width: 768px) {
+  body {
+    background-image: none !important;
+  }
+
+  /* 让每个板块都显示这张新图 */
+  section.hero,
+  section.about,
+  section.experience,
+  section.interactive,
+  section.contact {
+    background-image: url('IMG_0056.jpg') !important; /* <--- 换成了新图 */
+    background-repeat: no-repeat;
+    background-size: cover;         
+    background-position: center;    
+    background-attachment: scroll;  
+    min-height: 100vh;              
+  }
+
+  /* 保持文字清晰的遮罩（可选） */
+  section.hero::before,
+  section.about::before,
+  section.experience::before,
+  section.interactive::before,
+  section.contact::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(255, 255, 255, 0.2); /* 稍微调淡一点，因为原图比较白 */
+    pointer-events: none;
+  }
   
+  /* 确保内容层级 */
+  section.hero, section.about, section.experience, section.interactive, section.contact {
+    position: relative;
+    overflow: hidden;
+  }
+  section.hero > *, section.about > *, section.experience > *, section.interactive > *, section.contact > * {
+    position: relative;
+    z-index: 2;
+  }
+}
+
     </style>
     <!-- SweetAlert2 Dark Theme -->
 <link href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-dark@4/dark.css" rel="stylesheet">
